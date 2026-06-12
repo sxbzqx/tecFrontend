@@ -1,0 +1,38 @@
+.container {
+  overflow-x: hidden;
+  padding: 0 48px;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.pulseTag {
+  animation: pulse 2s infinite;
+  font-weight: 600;
+}
+
+.hoverCard {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+}
+
+.hoverCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1) !important;
+}
+
+.customCollapse {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+.customCollapse :global(.ant-collapse-header) {
+  padding: 20px 24px !important;
+  align-items: center !important;
+}

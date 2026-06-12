@@ -1,0 +1,1 @@
+fs.writeFileSync(path, t.replace(old, n), 'utf8'); ; type temp_patch.js ; node temp_patch.js  ; type temp_out.txt ; del temp_patch.js ; del temp_out.txt

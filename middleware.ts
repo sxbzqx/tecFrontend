@@ -2,25 +2,27 @@
 import type { NextRequest } from "next/server";
 import { apiBaseUrl } from "@/utils/config";
 
-
-
 const ROUTE_PERMISSIONS: { [key: string]: string[] } = {
-  "/admin": ["SuperAdmin"],                         
-  "/biznesplan": ["SuperAdmin", "Admin"],           
-  "/workers": ["SuperAdmin", "Admin"],              
-  "/otdels": ["SuperAdmin", "Admin", "Worker"],     
-  "/chat": ["SuperAdmin", "Admin", "Worker"],       
+  "/admin": ["SuperAdmin"],
+  "/biznesplan": ["SuperAdmin", "Admin"],
+  "/workers": ["SuperAdmin", "Admin"],
+  "/otdels": ["SuperAdmin", "Admin", "Worker"],
+  "/chat": ["SuperAdmin", "Admin", "Worker"],
+  "/documents": ["SuperAdmin", "Admin", "Worker"],
 };
-
 
 function getRoleFromToken(token: string | undefined): string | null {
   if (!token) return null;
   try {
-    const base64Url = token.split('.')[1]; 
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = Buffer.from(base64, 'base64').toString('utf8');
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = Buffer.from(base64, "base64").toString("utf8");
     const payload = JSON.parse(jsonPayload);
-    return payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || payload.role || null;
+    return (
+      payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+      payload.role ||
+      null
+    ); 
   } catch (error) {
     console.error("[Middleware] oшибка парсинга JWT токена:", error);
     return null;
@@ -79,19 +81,22 @@ export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  
-  
-  
-  const targetRoute = Object.keys(ROUTE_PERMISSIONS).find(route => pathname.startsWith(route));
+  const targetRoute = Object.keys(ROUTE_PERMISSIONS).find((route) =>
+    pathname.startsWith(route),
+  );
 
   if (targetRoute) {
     if (!accessToken && !refreshToken) {
-      console.log(`[Middleware] Нет токенов. оступ к ${pathname} запрещен. На /login`);
+      console.log(
+        `[Middleware] Нет токенов. оступ к ${pathname} запрещен. На /login`,
+      );
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     if (!accessToken && refreshToken) {
-      console.log("[Middleware] Нет accessToken, есть refreshToken. Пробуем обновить...");
+      console.log(
+        "[Middleware] Нет accessToken, есть refreshToken. Пробуем обновить...",
+      );
       const refreshed = await tryRefreshTokens(refreshToken);
       if (refreshed) return refreshed;
       return NextResponse.redirect(new URL("/login", request.url));
@@ -111,17 +116,18 @@ export async function middleware(request: NextRequest) {
       }
 
       if (!allowedRoles.includes(userRole)) {
-        console.log(`[Middleware] Поль ${userRole} не имеет доступа к ${pathname}.Перенаправляем на 403`);
+        console.log(
+          `[Middleware] Пользователь ${userRole} не имеет доступа к ${pathname}.Перенаправляем на 403`,
+        );
         return NextResponse.redirect(new URL("/403", request.url));
       }
     }
   }
 
-  
-  
-  
   if (accessToken && (pathname === "/login" || pathname === "/register")) {
-    console.log(`[Middleware] Пользователь уже авторизован. еренаправляем с ${pathname} на /workers`);
+    console.log(
+      `[Middleware] Пользователь уже авторизован. еренаправляем с ${pathname} на /workers`,
+    );
     const userRole = getRoleFromToken(accessToken);
 
     if (userRole === "Worker") {
@@ -135,7 +141,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|woff|woff2)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|woff|woff2)$).*)",
   ],
 };
-

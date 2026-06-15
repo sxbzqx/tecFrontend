@@ -29,7 +29,7 @@ export default function PostPage() {
           <Paragraph style={{ fontSize: 18 }}>{post.content}</Paragraph>
         </div>
         <hr />
-        <Text italic>Автор/Категория: {post.name}</Text>
+        <Text italic>Автор {post.name}, Категория {post.category.name}</Text>
       </Card>
     </div>
   ); 

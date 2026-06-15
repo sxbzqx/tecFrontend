@@ -4,4 +4,10 @@ export interface Post {
   title: string;
   content: string;
   createdAt: string;
+  categoryId: number; 
+  category?: {          
+    id: number;
+    name: string;
+    color: string;
+  };
 }

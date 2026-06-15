@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Table,
@@ -16,6 +16,7 @@ import {
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { $api } from "@/api/api";
 import { User } from "@/types/user";
+import { AxiosError } from "axios";
 
 const { Title, Text } = Typography;
 
@@ -56,9 +57,9 @@ export default function AdminUsersPage() {
       message.success("Роль пользователя успешно обновлена");
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
     },
-    onError: (err: any) => {
+    onError: (err: AxiosError<{ message?: string }>) => {
       const errorMsg =
-        err.response?.data?.message || "Не удалось изменить роль";
+        err.response?.data?.message || err.message || "Не удалось изменить роль";
       message.error(`Ошибка: ${errorMsg}`);
     },
   });
@@ -67,15 +68,15 @@ export default function AdminUsersPage() {
     mutation.mutate({ userId, newRole });
   };
 
-  const filteredUsers = users.filter((user) => {
-    const nameMatch = user.username
-      ?.toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const emailMatch = user.email
-      ?.toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return nameMatch || emailMatch;
-  });
+  // Оптимизация: мемоизируем отфильтрованный список, чтобы не пересчитывать его при каждом рендере, 
+  // если users или запрос не изменились.
+  const filteredUsers = useMemo(() => {
+    const lowerQuery = searchQuery.toLowerCase();
+    return users.filter((user) => 
+      user.username?.toLowerCase().includes(lowerQuery) || 
+      user.email?.toLowerCase().includes(lowerQuery)
+    );
+  }, [users, searchQuery]);
 
   const getRoleTagColor = (role: string) => {
     switch (role) {
@@ -140,7 +141,7 @@ export default function AdminUsersPage() {
     return (
       <div style={{ padding: "24px" }}>
         <Alert
-          message="Доступ запрещен или произошла ошибка"
+          title="Доступ запрещен или произошла ошибка"
           description="Убедитесь, что вы зашли под учетной записью SuperAdmin и бэкенд возвращает роуты управления ролями (/api/admin/users)."
           type="error"
           showIcon

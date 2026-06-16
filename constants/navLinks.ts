@@ -16,27 +16,28 @@ export const NAV_LINKS = [
     label: "Администрирование",
     roles: ["SuperAdmin", "Admin"],
     children: [
-      { key: "/admin/users", label: "Управление ролями" },
-      { key: "/admin/news", label: "Управление новостями" },
+      { key: "/admin/users", label: "Управление ролями", roles: ["SuperAdmin", "Admin"] },
+      { key: "/admin/news", label: "Управление новостями", roles: ["SuperAdmin", "Admin"] },
       {
         key: "/biznesplan",
         label: "Бизнес-Планы",
+        roles: ["SuperAdmin", "Admin"],
       },
     ],
   },
   {
     key: "workers",
     label: "Сотрудники",
-    roles: ["SuperAdmin", "Admin"],
+    roles: ["SuperAdmin", "Admin", "Worker"],
     children: [
-      { key: "/otdels", label: "Отделы" },
-      { key: "/workers", label: "Список сотрудников" },
+      { key: "/otdels", label: "Отделы", roles: ["SuperAdmin", "Admin", "Worker"] },
+      { key: "/workers", label: "Список сотрудников", roles: ["SuperAdmin", "Admin"] },
     ],
   },
   {
     key: "docs-sub",
     label: "Бланки",
-    roles: ["Workers", "Admin", "SuperAdmin"],
+    roles: ["Worker", "Admin", "SuperAdmin"],
     children: DOC_FILES.map(file => ({
       ...file,
       isDownload: true
@@ -45,10 +46,10 @@ export const NAV_LINKS = [
   {
     key: "bids-sub",
     label: "Заявки",
-    roles: ["Admin", "SuperAdmin"],
+    roles: ["Admin", "SuperAdmin", "Worker"],
     children: [
-      { key: "/bids/create", label: "Создать"},
-      { key: "/documents", label: "Архив заявок"}
+      { key: "/bids/create", label: "Создать", roles: ["Admin", "SuperAdmin"] },
+      { key: "/documents", label: "Архив заявок", roles: ["Admin", "SuperAdmin", "Worker"] }
     ]
   }
 ];

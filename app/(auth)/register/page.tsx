@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { authService } from "@/api/authService";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Input, Button, Alert, Typography, Form, Card } from "antd";
-import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
+import { Input, Button, Alert, Typography, Form, Card, Select } from "antd";
+import { UserOutlined, MailOutlined, LockOutlined, ApartmentOutlined } from "@ant-design/icons";
+import { $api } from "@/api/api";
 
 const { Title, Text } = Typography;
 
@@ -14,20 +15,27 @@ export default function RegisterPage() {
   const [form] = Form.useForm();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [otdels, setOtdels] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchOtdels = async () => {
+      try {
+        const response = await $api.get("/auth/otdels");
+        setOtdels(response.data);
+      } catch (err) {
+        console.error("Ошибка загрузки отделов:", err);
+      }
+    };
+    fetchOtdels();
+  }, []);
 
   const onFinish = async (values: any) => {
     setError("");
-    const { login, mail, password } = values;
+    const { login, mail, password, otdelId } = values;
 
     try {
       setLoading(true);
-
-      
-      await authService.register(login.trim(), password, mail.trim());
-
-      console.log(
-        "[RegisterPage] Автоматический вход выполнен, перенаправляем...",
-      );
+      await authService.register(login.trim(), password, mail.trim(), otdelId);
       router.push("/");
     } catch (err: any) {
       console.error("Ошибка при регистрации:", err);
@@ -60,7 +68,6 @@ export default function RegisterPage() {
           padding: "8px",
         }}
       >
-        {}
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
           <Title
             level={3}
@@ -79,7 +86,6 @@ export default function RegisterPage() {
           </Text>
         </div>
 
-        {/* Сама форма */}
         <Form
           form={form}
           layout="vertical"
@@ -93,7 +99,6 @@ export default function RegisterPage() {
             </Form.Item>
           )}
 
-          {/* Поле: Логин */}
           <Form.Item
             name="login"
             label="Логин"
@@ -109,7 +114,6 @@ export default function RegisterPage() {
             />
           </Form.Item>
 
-          {/* Поле: Почта */}
           <Form.Item
             name="mail"
             label="Электронная почта"
@@ -125,7 +129,24 @@ export default function RegisterPage() {
             />
           </Form.Item>
 
-          {/* Поле: Пароль */}
+          <Form.Item
+            name="otdelId"
+            label="Ваш отдел"
+            rules={[{ required: true, message: "Пожалуйста, выберите отдел" }]}
+          >
+            <Select 
+              placeholder="Выберите отдел" 
+              disabled={loading}
+              suffixIcon={<ApartmentOutlined />}
+            >
+              {otdels.map((o) => (
+                <Select.Option key={o.id} value={o.id}>
+                  {o.nameOtd}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
           <Form.Item
             name="password"
             label="Пароль"
@@ -141,7 +162,6 @@ export default function RegisterPage() {
             />
           </Form.Item>
 
-          {/* Поле: Подтверждение пароля */}
           <Form.Item
             name="confirmPassword"
             label="Подтверждение пароля"
@@ -165,7 +185,6 @@ export default function RegisterPage() {
             />
           </Form.Item>
 
-          {/* Кнопка отправки */}
           <Form.Item style={{ marginBottom: 0, marginTop: "24px" }}>
             <Button
               type="primary"

@@ -3,12 +3,13 @@ import type { NextRequest } from "next/server";
 import { apiBaseUrl } from "@/utils/config";
 
 const ROUTE_PERMISSIONS: { [key: string]: string[] } = {
-  "/admin": ["SuperAdmin"],
+  "/admin": ["SuperAdmin", "Admin"],
   "/biznesplan": ["SuperAdmin", "Admin"],
   "/workers": ["SuperAdmin", "Admin"],
   "/otdels": ["SuperAdmin", "Admin", "Worker"],
   "/chat": ["SuperAdmin", "Admin", "Worker"],
   "/documents": ["SuperAdmin", "Admin", "Worker"],
+  "/profile": ["SuperAdmin", "Admin", "Worker"],
 };
 
 function getRoleFromToken(token: string | undefined): string | null {
@@ -16,7 +17,7 @@ function getRoleFromToken(token: string | undefined): string | null {
   try {
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = Buffer.from(base64, "base64").toString("utf8");
+    const jsonPayload = atob(base64);
     const payload = JSON.parse(jsonPayload);
     return (
       payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||

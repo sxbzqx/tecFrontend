@@ -3,10 +3,10 @@ import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Layout, Menu, Button, Space, Tag } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import Cookies from "js-cookie";
 import { authService } from "@/api/authService";
 import { useAuth } from "@/hooks/useAuth";
 import { NAV_LINKS } from "@/constants/navLinks";
+import Link from "next/link";
 
 const { Header } = Layout;
 
@@ -21,11 +21,13 @@ const findItemByKey = (items: any[], key: string): any => {
   return null;
 };
 
-const prepareMenuItems:any = (links: any[]) => {
-  return links.map(({ isDownload, roles, ...rest }) => ({
-    ...rest,
-    children: rest.children ? prepareMenuItems(rest.children) : undefined,
-  }));
+const prepareMenuItems = (links: any[], userRole: string): any[] => {
+  return links
+    .filter((link) => !link.roles || link.roles.includes(userRole))
+    .map(({ isDownload, roles, children, ...rest }) => ({
+      ...rest,
+      children: children ? prepareMenuItems(children, userRole) : undefined,
+    }));
 };
 
 export default function Navbar() {
@@ -34,18 +36,17 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const handleLogout = async () => {
-    await authService.logout();
-    Cookies.remove("accessToken");
-    window.location.href = "/login";
+    await authService.logout(); 
   };
 
-  // Фильтруем ссылки по ролям
-  const filteredLinks = NAV_LINKS.filter((i) => i.roles.includes(auth.role));
+  const menuItems = prepareMenuItems(NAV_LINKS, auth.role);
 
   return (
-    <Header style={{ display: "flex", alignItems: "center", backgroundColor: "#fff" }}>
-      <div 
-        style={{ marginRight: "32px", cursor: "pointer", fontWeight: 800 }} 
+    <Header
+      style={{ display: "flex", alignItems: "center", backgroundColor: "#fff" }}
+    >
+      <div
+        style={{ marginRight: "32px", cursor: "pointer", fontWeight: 800 }}
         onClick={() => router.push("/")}
       >
         МП Бишкек ТЭЦ
@@ -54,7 +55,7 @@ export default function Navbar() {
       <Menu
         mode="horizontal"
         selectedKeys={[pathname]}
-        items={prepareMenuItems(filteredLinks)}
+        items={menuItems}
         onClick={(e) => {
           const item = findItemByKey(NAV_LINKS, e.key);
 
@@ -75,14 +76,30 @@ export default function Navbar() {
       <Space>
         {isMounted && auth.role !== "Guest" ? (
           <>
-            <Tag color={auth.role === "SuperAdmin" ? "volcano" : "blue"}>{auth.role}</Tag>
+            <Tag color={auth.role === "SuperAdmin" ? "volcano" : "blue"}>
+              {auth.role}
+            </Tag>
             <span>{auth.loginName}</span>
-            <Button type="text" danger icon={<LogoutOutlined />} onClick={handleLogout}>
-              Выйти
-            </Button>
+
+            {pathname === "/profile" ? (
+              <Button
+                type="default"
+                danger
+                icon={<LogoutOutlined />}
+                onClick={handleLogout}
+              >
+                Выйти
+              </Button>
+            ) : (
+              <Link href="/profile">
+                <Button type="primary" style={{ marginLeft: "30px" }}>
+                  Профиль
+                </Button>
+              </Link>
+            )}
           </>
         ) : (
-          <Button type="primary" onClick={() => router.push("/login")}>
+          <Button type="primary" style={{ marginLeft: "30px" }} onClick={() => router.push("/login")}>
             Вход
           </Button>
         )}

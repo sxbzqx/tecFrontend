@@ -22,86 +22,11 @@ import {
   LockOutlined,
 } from "@ant-design/icons";
 import styles from "@/components/main/Main.module.css";
+import FAQ_ITEMS from "@/components/main/faq";
+import FEATURES from "@/components/main/features";
+import QUICK_LINKS from "@/components/main/quickLinks";
 
 const { Title, Paragraph, Text } = Typography;
-
-const FEATURES = [
-  {
-    icon: <ReadOutlined />,
-    iconBg: "#EEEDFE",
-    iconColor: "#3C3489",
-    title: "Новости и события",
-    desc: "Важные объявления, приказы и новости предприятия в режиме реального времени",
-  },
-  {
-    icon: <TeamOutlined />,
-    iconBg: "#E1F5EE",
-    iconColor: "#085041",
-    title: "Сотрудники",
-    desc: "Справочник персонала, контакты отделов и структура предприятия",
-  },
-  {
-    icon: <FileTextOutlined />,
-    iconBg: "#FAEEDA",
-    iconColor: "#633806",
-    title: "Документы",
-    desc: "Нормативные акты, инструкции и формы для скачивания и работы",
-  },
-  {
-    icon: <LockOutlined />,
-    iconBg: "#E6F1FB",
-    iconColor: "#0C447C",
-    title: "Личный профиль",
-    desc: "Управление данными, настройки и доступ к персональной информации",
-  },
-];
-
-const QUICK_LINKS = [
-  { icon: <ReadOutlined />, iconBg: "#EEEDFE", iconColor: "#3C3489", title: "Новости", sub: "Лента событий", href: "/news" },
-  { icon: <TeamOutlined />, iconBg: "#E1F5EE", iconColor: "#085041", title: "Сотрудники", sub: "Справочник", href: "/workers" },
-  { icon: <MessageOutlined />, iconBg: "#FAEEDA", iconColor: "#633806", title: "Предложения", sub: "Обратная связь", href: "/suggestions" },
-  { icon: <UserOutlined />, iconBg: "#E6F1FB", iconColor: "#0C447C", title: "Профиль", sub: "Мои данные", href: "/profile" },
-];
-
-const FAQ_ITEMS = [
-  {
-    key: "1",
-    label: "Как войти в систему?",
-    children: (
-      <Paragraph className={styles.faqAnswer}>
-        Используйте логин и пароль, выданные HR-отделом. Если возникли проблемы — обратитесь к системному администратору или нажмите{" "}
-        <Link href="/login">Вход</Link> в меню.
-      </Paragraph>
-    ),
-  },
-  {
-    key: "2",
-    label: "Где посмотреть новости и объявления?",
-    children: (
-      <Paragraph className={styles.faqAnswer}>
-        Перейдите в раздел <Link href="/news">Новости</Link> через верхнее меню. Там публикуются все важные объявления, приказы и события предприятия.
-      </Paragraph>
-    ),
-  },
-  {
-    key: "3",
-    label: "Как отправить предложение по улучшению?",
-    children: (
-      <Paragraph className={styles.faqAnswer}>
-        Откройте раздел <Link href="/suggestions">Предложения</Link> в меню. Ваше сообщение будет рассмотрено администрацией в ближайшее время.
-      </Paragraph>
-    ),
-  },
-  {
-    key: "4",
-    label: "Как обновить данные профиля?",
-    children: (
-      <Paragraph className={styles.faqAnswer}>
-        Перейдите в <Link href="/profile">Профиль</Link> через кнопку в правом верхнем углу. Там можно обновить контактную информацию и настройки уведомлений.
-      </Paragraph>
-    ),
-  },
-];
 
 export default function HomePage() {
   return (

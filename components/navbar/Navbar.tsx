@@ -1,15 +1,18 @@
 "use client";
-import React from "react";
+
+import React, { useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Layout, Menu, Button, Space, Tag } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import { authService } from "@/api/authService";
+import { authService } from "@/services/authService";
 import { useAuth } from "@/hooks/useAuth";
 import { NAV_LINKS } from "@/constants/navLinks";
 import Link from "next/link";
+import type { MenuProps } from "antd";
 
 const { Header } = Layout;
 
+// Рекурсивный поиск объекта элемента по ключу
 const findItemByKey = (items: any[], key: string): any => {
   for (const item of items) {
     if (item.key === key) return item;
@@ -21,6 +24,7 @@ const findItemByKey = (items: any[], key: string): any => {
   return null;
 };
 
+// Подготовка элементов меню
 const prepareMenuItems = (links: any[], userRole: string): any[] => {
   return links
     .filter((link) => !link.roles || link.roles.includes(userRole))
@@ -31,79 +35,96 @@ const prepareMenuItems = (links: any[], userRole: string): any[] => {
 };
 
 export default function Navbar() {
-  const { auth, isMounted } = useAuth();
+  const { auth, isMounted, refreshAuth } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
+  // Мемоизируем меню, чтобы не пересчитывать при каждом рендере
+  const menuItems = useMemo(() => prepareMenuItems(NAV_LINKS, auth.role), [auth.role]);
+
   const handleLogout = async () => {
-    await authService.logout(); 
+    await authService.logout();
+    await refreshAuth();
+    router.push("/login");
   };
 
-  const menuItems = prepareMenuItems(NAV_LINKS, auth.role);
+  // Обработчик клика меню
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    const item = findItemByKey(NAV_LINKS, e.key);
+
+    if (item?.isDownload) {
+      const link = document.createElement("a");
+      link.href = e.key;
+      link.download = item.label || "download";
+      link.target = "_blank"; // Безопаснее для скачивания
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (e.key.startsWith("/")) {
+      router.push(e.key);
+    }
+  };
 
   return (
     <Header
-      style={{ display: "flex", alignItems: "center", backgroundColor: "#fff" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: "#001529",
+        // borderBottom: "2px solid #000",
+        padding: "0",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
+        zIndex: 1000,
+        position: "relative",
+      }}
     >
       <div
-        style={{ marginRight: "32px", cursor: "pointer", fontWeight: 800 }}
+        style={{ marginRight: "32px", cursor: "pointer", fontWeight: 800, color: "#fff", fontSize: "18px", marginLeft: "24px" }}
         onClick={() => router.push("/")}
       >
         МП Бишкек ТЭЦ
       </div>
 
       <Menu
+        theme="dark"
         mode="horizontal"
         selectedKeys={[pathname]}
         items={menuItems}
-        onClick={(e) => {
-          const item = findItemByKey(NAV_LINKS, e.key);
-
-          if (item?.isDownload) {
-            const link = document.createElement("a");
-            link.href = e.key;
-            link.download = item.label;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          } else if (e.key.startsWith("/")) {
-            router.push(e.key);
-          }
-        }}
-        style={{ flex: 1, borderBottom: "none" }}
+        onClick={handleMenuClick}
+        style={{ flex: 1, borderBottom: "none", backgroundColor: "transparent" }}
       />
 
-      <Space>
-        {isMounted && auth.role !== "Guest" ? (
-          <>
-            <Tag color={auth.role === "SuperAdmin" ? "volcano" : "blue"}>
-              {auth.role}
-            </Tag>
-            <span>{auth.loginName}</span>
+      {isMounted && (
+        <Space style={{ marginRight: "24px" }}>
+          {auth.role !== "Guest" ? (
+            <>
+              <Tag color={auth.role === "SuperAdmin" ? "volcano" : "blue"}>
+                {auth.role}
+              </Tag>
+              <span style={{ color: "rgba(255, 255, 255, 0.85)" }}>{auth.loginName}</span>
 
-            {pathname === "/profile" ? (
-              <Button
-                type="default"
-                danger
-                icon={<LogoutOutlined />}
-                onClick={handleLogout}
-              >
-                Выйти
-              </Button>
-            ) : (
-              <Link href="/profile">
-                <Button type="primary" style={{ marginLeft: "30px" }}>
-                  Профиль
+              {pathname === "/profile" ? (
+                <Button
+                  type="default"
+                  danger
+                  icon={<LogoutOutlined />}
+                  onClick={handleLogout}
+                >
+                  Выйти
                 </Button>
-              </Link>
-            )}
-          </>
-        ) : (
-          <Button type="primary" style={{ marginLeft: "30px" }} onClick={() => router.push("/login")}>
-            Вход
-          </Button>
-        )}
-      </Space>
+              ) : (
+                <Link href="/profile">
+                  <Button type="primary">Профиль</Button>
+                </Link>
+              )}
+            </>
+          ) : (
+            <Button type="primary" onClick={() => router.push("/login")}>
+              Вход
+            </Button>
+          )}
+        </Space>
+      )}
     </Header>
   );
 }

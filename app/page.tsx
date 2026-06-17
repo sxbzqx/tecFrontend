@@ -81,10 +81,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div
-        className={styles.landingContent}
-        style={{ padding: "0 24px 24px 24px" }}
-      >
+      <div className={styles.landingContent}>
         {/* ── Features ── */}
         <section className={styles.section}>
           <Text className={styles.sectionLabel}>Возможности</Text>

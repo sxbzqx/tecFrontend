@@ -1,3 +1,12 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.ant-layout {
+  padding: 0 !important;
+  margin: 0 !important;
+}
 /* ─── Page wrapper ─── */
 .landingPage {
   min-height: 100vh;
@@ -360,6 +369,7 @@
   line-height: 1.65 !important;
   margin: 0 !important;
 }
+
 
 /* ─── Responsive ─── */
 @media (max-width: 768px) {

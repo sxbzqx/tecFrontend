@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { authService } from "@/api/authService";
+import { useAuth } from "@/hooks/useAuth";
+import { authService } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Input, Button, Alert, Typography, Form, Card, Select } from "antd";
@@ -12,6 +13,7 @@ const { Title, Text } = Typography;
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [form] = Form.useForm();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,6 +38,7 @@ export default function RegisterPage() {
     try {
       setLoading(true);
       await authService.register(login.trim(), password, mail.trim(), otdelId);
+      await refreshAuth();
       router.push("/");
     } catch (err: any) {
       console.error("Ошибка при регистрации:", err);

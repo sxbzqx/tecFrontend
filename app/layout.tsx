@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar/Navbar";
 import FooterWrapper from '@/components/navbar/FooterWrapper'; 
 import { Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout'; 
+import { AuthProvider } from '@/context/AuthContext';
 
 export const metadata: Metadata = {
   icons: {
@@ -18,13 +19,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ru">
       <body>
         <Providers>
-          <Layout style={{ minHeight: "100vh" }}>
-            <Navbar />
-            <Content style={{ padding: "24px" }}>
-              {children}
-            </Content>
-            <FooterWrapper />
-          </Layout>
+          <AuthProvider>
+            <Layout style={{ minHeight: "100vh" }}>
+              <Navbar />
+              <Content style={{ padding: 0 }}>
+                {children}
+              </Content>
+              <FooterWrapper />
+            </Layout>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

@@ -3,12 +3,13 @@ import type { NextRequest } from "next/server";
 import { apiBaseUrl } from "@/utils/config";
 
 const ROUTE_PERMISSIONS: { [key: string]: string[] } = {
-  "/admin": ["SuperAdmin"],
+  "/admin": ["SuperAdmin", "Admin"],
   "/biznesplan": ["SuperAdmin", "Admin"],
   "/workers": ["SuperAdmin", "Admin"],
   "/otdels": ["SuperAdmin", "Admin", "Worker"],
   "/chat": ["SuperAdmin", "Admin", "Worker"],
   "/documents": ["SuperAdmin", "Admin", "Worker"],
+  "/profile": ["SuperAdmin", "Admin", "Worker"],
 };
 
 function getRoleFromToken(token: string | undefined): string | null {
@@ -16,7 +17,9 @@ function getRoleFromToken(token: string | undefined): string | null {
   try {
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = Buffer.from(base64, "base64").toString("utf8");
+    const jsonPayload = new TextDecoder().decode(
+      Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))
+    );
     const payload = JSON.parse(jsonPayload);
     return (
       payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
@@ -25,6 +28,26 @@ function getRoleFromToken(token: string | undefined): string | null {
     ); 
   } catch (error) {
     console.error("[Middleware] oшибка парсинга JWT токена:", error);
+    return null;
+  }
+}
+
+function getLoginFromToken(token: string | undefined): string | null {
+  if (!token) return null;
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = new TextDecoder().decode(
+      Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))
+    );
+    const payload = JSON.parse(jsonPayload);
+    return (
+      payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] ||
+      payload.unique_name ||
+      payload.loginName ||
+      null
+    );
+  } catch {
     return null;
   }
 }
@@ -125,15 +148,16 @@ export async function middleware(request: NextRequest) {
   }
 
   if (accessToken && (pathname === "/login" || pathname === "/register")) {
+    const loginName = getLoginFromToken(accessToken) || "Сотрудник";
     console.log(
-      `[Middleware] Пользователь уже авторизован. еренаправляем с ${pathname} на /workers`,
+      `[Middleware] Пользователь ${loginName} уже авторизован. Перенаправляем с ${pathname} на главную страницу`,
     );
     const userRole = getRoleFromToken(accessToken);
 
     if (userRole === "Worker") {
-      return NextResponse.redirect(new URL("/otdels", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
-    return NextResponse.redirect(new URL("/workers", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();

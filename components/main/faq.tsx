@@ -1,30 +1,52 @@
-import React from "react";
-import { Collapse } from "antd";
-import type { CollapseProps } from "antd";
-import styles from "@/components/main/Main.module.css";
+"use client";
 
-const items: CollapseProps["items"] = [
+import Link from "next/link";
+import styles from "@/components/main/Main.module.css";
+import Paragraph from "antd/es/typography/Paragraph";
+
+const FAQ_ITEMS = [
   {
     key: "1",
-    label: "Как войти или зарегистрироваться?",
-    children: <p>Нажмите на кнопку <a href="/login">Вход</a></p>,
+    label: "Как войти в систему?",
+    children: (
+      <Paragraph className={styles.faqAnswer}>
+        Используйте логин, пароль и выберите отдел в котором работаете. Если
+        возникли проблемы — обратитесь к администратору или нажмите{" "}
+        <Link href="/login">Вход</Link> в меню.
+      </Paragraph>
+    ),
   },
   {
     key: "2",
-    label: "Где посмотреть посты или новости?",
-    children: <p>Перейдите во вкладку <a href="/news">Новости</a></p>,
+    label: "Где посмотреть новости и объявления?",
+    children: (
+      <Paragraph className={styles.faqAnswer}>
+        Перейдите в раздел <Link href="/news">Новости</Link> через верхнее меню.
+        Там публикуются все важные объявления, приказы и события предприятия.
+      </Paragraph>
+    ),
   },
   {
     key: "3",
-    label: "Куда писать по предложениям по улучшению сайта?",
-    children: <p>Писать по поводу улучшения сайта: <a href="/suggestions">Предложка</a></p>,
+    label: "Как отправить предложение по улучшению?",
+    children: (
+      <Paragraph className={styles.faqAnswer}>
+        Откройте раздел <Link href="/suggestions">Предложения</Link> в меню.
+        Ваше сообщение будет рассмотрено администрацией в ближайшее время.
+      </Paragraph>
+    ),
+  },
+  {
+    key: "4",
+    label: "Как обновить данные профиля?",
+    children: (
+      <Paragraph className={styles.faqAnswer}>
+        Перейдите в <Link href="/profile">Профиль</Link> через кнопку в правом
+        верхнем углу. Там можно обновить контактную информацию и настройки
+        уведомлений.
+      </Paragraph>
+    ),
   },
 ];
 
-const FAQ: React.FC = () => (
-  <div style={{width: "65%", marginTop: "20px"}}>
-    <Collapse className={styles.customCollapse} items={items} accordion />
-  </div>
-);
-
-export default FAQ;
+export default FAQ_ITEMS;

@@ -1,38 +1,395 @@
-.container {
-  overflow-x: hidden;
-  padding: 0 48px;
+body {
+  margin: 0;
+  padding: 0;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+.ant-layout {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* ─── Page wrapper ─── */
+.landingPage {
+  min-height: 100vh;
+  background: #f8fafc;
 }
 
-.pulseTag {
-  animation: pulse 2s infinite;
-  font-weight: 600;
+.landingContent {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
 }
 
-.hoverCard {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+/* ─── Hero ─── */
+.hero {
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 72px 40px 60px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.hoverCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1) !important;
-}
-
-.customCollapse {
-  background: #ffffff !important;
+.heroBadge {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #3C3489 !important;
+  background: #EEEDFE !important;
   border: none !important;
+  padding: 6px 16px !important;
+  border-radius: 999px !important;
+  margin-bottom: 28px;
+}
+
+.heroTitle {
+  font-size: 42px !important;
+  font-weight: 700 !important;
+  letter-spacing: -.03em !important;
+  line-height: 1.15 !important;
+  color: #0f172a !important;
+  max-width: 600px;
+  margin-bottom: 18px !important;
+}
+
+.heroAccent {
+  color: #534AB7;
+}
+
+.heroSub {
+  font-size: 16px !important;
+  color: #64748b !important;
+  max-width: 480px;
+  line-height: 1.7 !important;
+  margin-bottom: 36px !important;
+}
+
+.heroBtns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 52px;
+}
+
+.btnPrimary {
+  background: #534AB7 !important;
+  border-color: #534AB7 !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  height: 44px !important;
+  padding: 0 28px !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+.btnPrimary:hover {
+  background: #3C3489 !important;
+  border-color: #3C3489 !important;
+}
+
+.btnGhost {
+  height: 44px !important;
+  padding: 0 24px !important;
+  border-radius: 10px !important;
+  border-color: #e2e8f0 !important;
+  color: #475569 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.btnGhost:hover {
+  border-color: #534AB7 !important;
+  color: #534AB7 !important;
+}
+
+/* Hero stats */
+.heroStats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+  padding-top: 44px;
+  border-top: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.heroStatItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.heroStatVal {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+
+.heroStatLbl {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.heroStatDivider {
+  width: 1px;
+  height: 36px;
+  background: #f1f5f9;
+}
+
+/* ─── Section commons ─── */
+.section {
+  padding: 56px 0;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #534AB7 !important;
+  margin-bottom: 10px;
+}
+
+.sectionTitle {
+  font-size: 26px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  letter-spacing: -.02em !important;
+  margin-bottom: 10px !important;
+}
+
+.sectionSub {
+  font-size: 15px !important;
+  color: #64748b !important;
+  line-height: 1.65 !important;
+  margin-bottom: 0 !important;
+  max-width: 460px;
+}
+
+.divider {
+  border-color: #f1f5f9 !important;
+  margin: 0 !important;
+}
+
+/* ─── Feature cards ─── */
+.featureCard {
+  height: 100%;
   border-radius: 16px !important;
+  border: 1px solid #f1f5f9 !important;
+  background: #ffffff !important;
+  transition: transform .22s ease, box-shadow .22s ease !important;
+}
+
+.featureCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px -8px rgba(0,0,0,.08) !important;
+}
+
+.featureCard :global(.ant-card-body) {
+  padding: 22px 20px !important;
+}
+
+.featureIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.featureTitle {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  margin-bottom: 6px !important;
+}
+
+.featureDesc {
+  font-size: 13px !important;
+  color: #64748b !important;
+  line-height: 1.55 !important;
+  margin: 0 !important;
+}
+
+/* ─── Quick links ─── */
+.linkCard {
+  border-radius: 14px !important;
+  border: 1px solid #f1f5f9 !important;
+  background: #ffffff !important;
+  transition: border-color .18s ease, box-shadow .18s ease !important;
+  cursor: pointer;
+}
+
+.linkCard:hover {
+  border-color: #AFA9EC !important;
+  box-shadow: 0 4px 16px -6px rgba(83,74,183,.12) !important;
+}
+
+.linkCard :global(.ant-card-body) {
+  padding: 16px 18px !important;
+}
+
+.linkCardInner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.linkIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.linkText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.linkTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.linkSub {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.linkArrow {
+  font-size: 13px;
+  color: #cbd5e1;
+  flex-shrink: 0;
+  transition: color .15s, transform .15s;
+}
+
+.linkCard:hover .linkArrow {
+  color: #534AB7;
+  transform: translateX(2px);
+}
+
+/* ─── CTA Banner ─── */
+.ctaBanner {
+  border-radius: 18px !important;
+  border: 1px solid #EEEDFE !important;
+  background: #faf9ff !important;
+}
+
+.ctaBanner :global(.ant-card-body) {
+  padding: 28px 32px !important;
+}
+
+.ctaInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.ctaTitle {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  margin-bottom: 6px !important;
+}
+
+.ctaSub {
+  font-size: 13px !important;
+  color: #64748b !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  max-width: 440px;
+}
+
+/* ─── FAQ ─── */
+.faqCollapse {
+  margin-top: 28px;
+  background: transparent !important;
+  border: none !important;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faqCollapse :global(.ant-collapse-item) {
+  background: #ffffff !important;
+  border: 1px solid #f1f5f9 !important;
+  border-radius: 12px !important;
   overflow: hidden;
 }
 
-.customCollapse :global(.ant-collapse-header) {
-  padding: 20px 24px !important;
+.faqCollapse :global(.ant-collapse-item-active) {
+  border-color: #CECBF6 !important;
+}
+
+.faqCollapse :global(.ant-collapse-header) {
+  padding: 18px 22px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
   align-items: center !important;
+}
+
+.faqCollapse :global(.ant-collapse-item-active .ant-collapse-header) {
+  color: #534AB7 !important;
+}
+
+.faqCollapse :global(.ant-collapse-content-box) {
+  padding: 4px 22px 20px !important;
+}
+
+.faqAnswer {
+  font-size: 14px !important;
+  color: #64748b !important;
+  line-height: 1.65 !important;
+  margin: 0 !important;
+}
+
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .hero {
+    padding: 48px 20px 44px;
+  }
+  .heroTitle {
+    font-size: 28px !important;
+  }
+  .heroStats {
+    gap: 24px;
+  }
+  .heroStatDivider {
+    display: none;
+  }
+  .landingContent {
+    padding: 0 16px 60px;
+  }
+  .ctaInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

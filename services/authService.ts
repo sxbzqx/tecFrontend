@@ -15,24 +15,46 @@ export const authService = {
       password: passwordStr,
     });
 
-    const { accessToken, refreshToken } = response.data; 
+    const { accessToken, refreshToken } = response.data;
 
     if (accessToken && refreshToken) {
-      Cookies.set("accessToken", accessToken, { expires: 1, secure: isProd, sameSite: "strict", path: "/" });
-      Cookies.set("refreshToken", refreshToken, { expires: 7, secure: isProd, sameSite: "strict", path: "/" });
+      Cookies.set("accessToken", accessToken, {
+        expires: 1,
+        secure: isProd,
+        sameSite: "strict",
+        path: "/",
+      });
+      Cookies.set("refreshToken", refreshToken, {
+        expires: 7,
+        secure: isProd,
+        sameSite: "strict",
+        path: "/",
+      });
     }
     return response.data;
   },
 
-  async register(loginStr: string, passwordStr: string, mailStr: string): Promise<TokenResponse> {
-    await $api.post("/auth/register", { login: loginStr, password: passwordStr, mail: mailStr });
+  async register(
+    loginStr: string,
+    passwordStr: string,
+    mailStr: string,
+    otdelId: string | number, 
+  ): Promise<TokenResponse> {
+    await $api.post("/auth/register", {
+      login: loginStr,
+      password: passwordStr,
+      mail: mailStr,
+      otdelId: Number(otdelId),
+    });
+
     return this.login(loginStr, passwordStr);
   },
 
   async logout(): Promise<void> {
     try {
       const refreshToken = Cookies.get("refreshToken");
-      if (refreshToken) await $api.post("/auth/logout", { refreshToken: refreshToken.trim() });
+      if (refreshToken)
+        await $api.post("/auth/logout", { refreshToken: refreshToken.trim() });
     } catch (err) {
       console.error("Ошибка при логауте:", err);
     } finally {
@@ -45,12 +67,12 @@ export const authService = {
   async getCurrentUser(): Promise<{ role: string; loginName: string } | null> {
     try {
       const { data } = await $api.get("/auth/me");
-      return { 
-        role: data.role || data.Role || "Worker", 
-        loginName: data.loginName || data.LoginName || "Сотрудник" 
+      return {
+        role: data.role || data.Role || "Worker",
+        loginName: data.loginName || data.LoginName || "Сотрудник",
       };
     } catch {
       return null;
     }
-  }
+  },
 };

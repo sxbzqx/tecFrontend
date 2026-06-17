@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authService } from "@/api/authService";
+import { authService } from "@/services/authService";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 import { Input, Button, Alert, Typography, Form, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
@@ -11,6 +12,8 @@ const { Title, Text } = Typography;
 
 export default function LoginPage() {
   const [form] = Form.useForm();
+  const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -23,12 +26,10 @@ export default function LoginPage() {
 
       
       await authService.login(login.trim(), password);
+      await refreshAuth();
 
-      console.log("[LoginPage] Авторизация успешна! Перенаправляем на ТЭЦ...");
-
-      
-      
-      window.location.href = "/";
+      console.log("[LoginPage] Авторизация успешна, состояние обновлено");
+      router.push("/");
     } catch (err: any) {
       console.error("Ошибка авторизации:", err);
       

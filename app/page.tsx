@@ -11,16 +11,7 @@ import {
   Collapse,
   Tag,
 } from "antd";
-import {
-  ThunderboltOutlined,
-  ArrowRightOutlined,
-  ReadOutlined,
-  TeamOutlined,
-  FileTextOutlined,
-  UserOutlined,
-  MessageOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
+import { ThunderboltOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import styles from "@/components/main/Main.module.css";
 import FAQ_ITEMS from "@/components/main/faq";
 import FEATURES from "@/components/main/features";
@@ -31,13 +22,9 @@ const { Title, Paragraph, Text } = Typography;
 export default function HomePage() {
   return (
     <div className={styles.landingPage}>
-
       {/* ── Hero ── */}
       <section className={styles.hero}>
-        <Tag
-          icon={<ThunderboltOutlined />}
-          className={styles.heroBadge}
-        >
+        <Tag icon={<ThunderboltOutlined />} className={styles.heroBadge}>
           Корпоративная система
         </Tag>
 
@@ -47,8 +34,8 @@ export default function HomePage() {
         </Title>
 
         <Paragraph className={styles.heroSub}>
-          Единый портал для сотрудников теплоэлектроцентрали —
-          новости, документы и управление всё здесь
+          Единый портал для сотрудников теплоэлектроцентрали — новости,
+          документы и управление всё здесь
         </Paragraph>
 
         <div className={styles.heroBtns}>
@@ -81,7 +68,9 @@ export default function HomePage() {
           </div>
           <div className={styles.heroStatDivider} />
           <div className={styles.heroStatItem}>
-            <span className={styles.heroStatVal}>{new Date().getFullYear() - 60}</span>
+            <span className={styles.heroStatVal}>
+              {new Date().getFullYear() - 60}
+            </span>
             <span className={styles.heroStatLbl}>Год основания</span>
           </div>
           <div className={styles.heroStatDivider} />
@@ -92,8 +81,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className={styles.landingContent} style={{ padding: '0 24px 24px 24px' }}>
-
+      <div
+        className={styles.landingContent}
+        style={{ padding: "0 24px 24px 24px" }}
+      >
         {/* ── Features ── */}
         <section className={styles.section}>
           <Text className={styles.sectionLabel}>Возможности</Text>
@@ -101,7 +92,8 @@ export default function HomePage() {
             Всё что нужно — в одном месте
           </Title>
           <Paragraph className={styles.sectionSub}>
-            Портал объединяет ключевые инструменты для ежедневной работы сотрудников
+            Портал объединяет ключевые инструменты для ежедневной работы
+            сотрудников
           </Paragraph>
 
           <Row gutter={[16, 16]} style={{ marginTop: 32 }}>
@@ -114,7 +106,9 @@ export default function HomePage() {
                   >
                     {f.icon}
                   </div>
-                  <Title level={5} className={styles.featureTitle}>{f.title}</Title>
+                  <Title level={5} className={styles.featureTitle}>
+                    {f.title}
+                  </Title>
                   <Paragraph className={styles.featureDesc}>{f.desc}</Paragraph>
                 </Card>
               </Col>
@@ -127,7 +121,9 @@ export default function HomePage() {
         {/* ── Quick links ── */}
         <section className={styles.section}>
           <Text className={styles.sectionLabel}>Навигация</Text>
-          <Title level={2} className={styles.sectionTitle}>Быстрый переход</Title>
+          <Title level={2} className={styles.sectionTitle}>
+            Быстрый переход
+          </Title>
           <Paragraph className={styles.sectionSub}>
             Основные разделы портала — всё под рукой
           </Paragraph>
@@ -165,8 +161,8 @@ export default function HomePage() {
                 Есть идеи по улучшению портала?
               </Title>
               <Paragraph className={styles.ctaSub}>
-                Оставьте предложение — мы читаем каждое сообщение
-                и стараемся сделать систему лучше
+                Оставьте предложение — мы читаем каждое сообщение и стараемся
+                сделать систему лучше
               </Paragraph>
             </div>
             <Link href="/suggestions">
@@ -180,7 +176,9 @@ export default function HomePage() {
         {/* ── FAQ ── */}
         <section className={styles.section}>
           <Text className={styles.sectionLabel}>Справка</Text>
-          <Title level={2} className={styles.sectionTitle}>Частые вопросы</Title>
+          <Title level={2} className={styles.sectionTitle}>
+            Частые вопросы
+          </Title>
 
           <Collapse
             items={FAQ_ITEMS}
@@ -189,7 +187,6 @@ export default function HomePage() {
             className={styles.faqCollapse}
           />
         </section>
-
       </div>
     </div>
   );

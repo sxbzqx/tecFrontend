@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <Layout style={{ minHeight: "100vh" }}>
             <Navbar />
-            <Content style={{ padding: "24px" }}>
+            <Content>
               {children}
             </Content>
             <FooterWrapper />

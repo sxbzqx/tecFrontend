@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Card, Descriptions, Spin, Typography, message } from "antd";
-import { $api } from "@/api/api"; // Убедитесь, что ваш axios-клиент настроен
+import { $api } from "@/api/api"; 
 
 const { Title } = Typography;
 

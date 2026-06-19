@@ -22,7 +22,7 @@ export default function NewsPage() {
     );
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px" }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px", }}>
       <Title level={2}>Новости ТЭЦ</Title>
 
       <Flex vertical gap="middle">

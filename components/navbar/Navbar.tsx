@@ -75,8 +75,7 @@ export default function Navbar() {
         padding: "0",
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
         zIndex: 1000,
-        width: "100vw",
-        position: "fixed",
+        position: "relative",
       }}
     >
       <div

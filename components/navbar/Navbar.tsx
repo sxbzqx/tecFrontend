@@ -40,7 +40,10 @@ export default function Navbar() {
   const pathname = usePathname();
 
   // Мемоизируем меню, чтобы не пересчитывать при каждом рендере
-  const menuItems = useMemo(() => prepareMenuItems(NAV_LINKS, auth.role), [auth.role]);
+  const menuItems = useMemo(
+    () => prepareMenuItems(NAV_LINKS, auth.role),
+    [auth.role],
+  );
 
   const handleLogout = async () => {
     await authService.logout();
@@ -79,7 +82,14 @@ export default function Navbar() {
       }}
     >
       <div
-        style={{ marginRight: "32px", cursor: "pointer", fontWeight: 800, color: "#fff", fontSize: "18px", marginLeft: "24px" }}
+        style={{
+          marginRight: "32px",
+          cursor: "pointer",
+          fontWeight: 800,
+          color: "#fff",
+          fontSize: "18px",
+          marginLeft: "24px",
+        }}
         onClick={() => router.push("/")}
       >
         МП Бишкек ТЭЦ
@@ -91,35 +101,38 @@ export default function Navbar() {
         selectedKeys={[pathname]}
         items={menuItems}
         onClick={handleMenuClick}
-        style={{ flex: 1, borderBottom: "none", backgroundColor: "transparent" }}
+        style={{
+          flex: 1,
+          borderBottom: "none",
+          backgroundColor: "transparent",
+        }}
       />
 
-      {isMounted && (
-        <Space style={{ marginRight: "24px" }}>
-          {auth.role !== "Guest" ? (
-            <>
-              <Tag color={auth.role === "SuperAdmin" ? "volcano" : "blue"}>
-                {auth.role}
-              </Tag>
-              <span style={{ color: "rgba(255, 255, 255, 0.85)" }}>{auth.loginName}</span>
-
-              {pathname === "/profile" ? (
-                <Link href="/">
-                  <Button type="primary">На главную</Button>
-                </Link>
-              ) : (
-                <Link href="/profile">
-                  <Button type="primary">Профиль</Button>
-                </Link>
-              )}
-            </>
-          ) : (
-            <Button type="primary" onClick={() => router.push("/login")}>
-              Вход
-            </Button>
-          )}
-        </Space>
-      )}
+      <Space style={{ marginRight: "24px" }}>
+        {auth.role !== "Guest" ? (
+          <>
+            <Tag color={auth.role === "SuperAdmin" ? "volcano" : "blue"}>
+              {auth.role}
+            </Tag>
+            <span style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+              {auth.loginName}
+            </span>
+            {pathname === "/profile" ? (
+              <Link href="/">
+                <Button type="primary">На главную</Button>
+              </Link>
+            ) : (
+              <Link href="/profile">
+                <Button type="primary">Профиль</Button>
+              </Link>
+            )}
+          </>
+        ) : (
+          <Button type="primary" onClick={() => router.push("/login")}>
+            Вход
+          </Button>
+        )}
+      </Space>
     </Header>
   );
 }

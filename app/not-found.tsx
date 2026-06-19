@@ -7,7 +7,7 @@ export default function NotFoundPage() {
   const router = useRouter();
 
   return (
-    <div className="flex justify-center items-center">
+    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
       <Result
         status="404"
         title="404: Страница не найдена"

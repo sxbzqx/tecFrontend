@@ -17,18 +17,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [auth, setAuth] = useState<AuthState>({ role: "Guest", loginName: "" });
+export const AuthProvider: React.FC<{
+  children: React.ReactNode;
+  initialAuth?: AuthState;
+}> = ({ children, initialAuth }) => {
+  const [auth, setAuth] = useState<AuthState>(initialAuth ?? { role: "Guest", loginName: "" });
   const [isMounted, setIsMounted] = useState(false);
 
   const refreshAuth = useCallback(async () => {
     if (Cookies.get("accessToken")) {
       const userData = await authService.getCurrentUser();
-      if (userData) {
-        setAuth(userData);
-      } else {
-        setAuth({ role: "Guest", loginName: "" });
-      }
+      setAuth(userData ?? { role: "Guest", loginName: "" });
     } else {
       setAuth({ role: "Guest", loginName: "" });
     }
@@ -36,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     setIsMounted(true);
+    // Сервер уже знает роль из cookie — здесь только валидируем/синхронизируем
     refreshAuth();
   }, [refreshAuth]);
 
@@ -48,8 +48,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuthContext must be used within AuthProvider");
-  }
+  if (!context) throw new Error("useAuthContext must be used within AuthProvider");
   return context;
 };

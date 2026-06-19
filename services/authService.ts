@@ -4,9 +4,31 @@ import Cookies from "js-cookie";
 interface TokenResponse {
   accessToken: string;
   refreshToken: string;
+  role?: string;
+}
+
+interface CurrentUser {
+  role: string;
+  loginName: string;
+  department: string;
 }
 
 const isProd = process.env.NODE_ENV === "production";
+
+function setAuthCookies(accessToken: string, refreshToken: string) {
+  Cookies.set("accessToken", accessToken, {
+    expires: 1,
+    secure: isProd,
+    sameSite: "strict",
+    path: "/",
+  });
+  Cookies.set("refreshToken", refreshToken, {
+    expires: 7,
+    secure: isProd,
+    sameSite: "strict",
+    path: "/",
+  });
+}
 
 export const authService = {
   async login(loginStr: string, passwordStr: string): Promise<TokenResponse> {
@@ -16,20 +38,8 @@ export const authService = {
     });
 
     const { accessToken, refreshToken } = response.data;
-
     if (accessToken && refreshToken) {
-      Cookies.set("accessToken", accessToken, {
-        expires: 1,
-        secure: isProd,
-        sameSite: "strict",
-        path: "/",
-      });
-      Cookies.set("refreshToken", refreshToken, {
-        expires: 7,
-        secure: isProd,
-        sameSite: "strict",
-        path: "/",
-      });
+      setAuthCookies(accessToken, refreshToken);
     }
     return response.data;
   },
@@ -38,7 +48,7 @@ export const authService = {
     loginStr: string,
     passwordStr: string,
     mailStr: string,
-    otdelId: string | number, 
+    otdelId: string | number,
   ): Promise<TokenResponse> {
     await $api.post("/auth/register", {
       login: loginStr,
@@ -64,15 +74,37 @@ export const authService = {
     }
   },
 
-  async getCurrentUser(): Promise<{ role: string; loginName: string } | null> {
+  async getCurrentUser(): Promise<CurrentUser | null> {
     try {
       const { data } = await $api.get("/auth/me");
       return {
         role: data.role || data.Role || "Worker",
         loginName: data.loginName || data.LoginName || "Сотрудник",
+        department: data.department || data.Department || "Не указан",
       };
     } catch {
       return null;
     }
+  },
+
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await $api.post("/auth/change-password", { currentPassword, newPassword });
+  },
+
+  async changeLogin(newLogin: string, currentPassword: string): Promise<TokenResponse> {
+    const response = await $api.post<TokenResponse>("/auth/change-login", {
+      newLogin,
+      currentPassword,
+    });
+
+    const data = response.data as any;
+    const accessToken = data.accessToken || data.AccessToken;
+    const refreshToken = data.refreshToken || data.RefreshToken;
+
+    if (accessToken && refreshToken) {
+      setAuthCookies(accessToken, refreshToken);
+    }
+
+    return response.data;
   },
 };

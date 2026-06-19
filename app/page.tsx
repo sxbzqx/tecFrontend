@@ -179,7 +179,7 @@ export default function HomePage() {
 
           <Collapse
             items={FAQ_ITEMS}
-            defaultActiveKey={["1"]}
+            defaultActiveKey={[]}
             accordion
             className={styles.faqCollapse}
           />

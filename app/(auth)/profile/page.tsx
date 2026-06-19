@@ -13,7 +13,6 @@ import {
   Divider,
   Result,
   Button,
-  Modal,
   Form,
   Input,
   Space,
@@ -24,6 +23,7 @@ import {
   ReloadOutlined,
   EditOutlined,
   LockOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { authService } from "@/services/authService";
 
@@ -37,9 +37,10 @@ interface UserProfile {
   department: string;
 }
 
-// Реальные роли в системе — Worker / Admin / SuperAdmin (см. middleware.ts).
-// Цвет тега растёт по "весу" роли, подпись — человекочитаемая.
-const ROLE_META: Record<string, { label: string; tagColor: string; ring: string }> = {
+const ROLE_META: Record<
+  string,
+  { label: string; tagColor: string; ring: string }
+> = {
   worker: { label: "Сотрудник", tagColor: "blue", ring: ACCENT },
   admin: { label: "Администратор", tagColor: "gold", ring: "#D97706" },
   superadmin: { label: "Супер-админ", tagColor: "red", ring: "#DC2626" },
@@ -47,7 +48,9 @@ const ROLE_META: Record<string, { label: string; tagColor: string; ring: string 
 
 function getRoleMeta(role?: string) {
   const key = role?.toLowerCase() ?? "";
-  return ROLE_META[key] ?? { label: role ?? "—", tagColor: "default", ring: ACCENT };
+  return (
+    ROLE_META[key] ?? { label: role ?? "—", tagColor: "default", ring: ACCENT }
+  );
 }
 
 function getInitials(name?: string) {
@@ -55,13 +58,14 @@ function getInitials(name?: string) {
   return name.slice(0, 2).toUpperCase();
 }
 
+type Panel = "login" | "password" | null;
+
 export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [activePanel, setActivePanel] = useState<Panel>(null);
   const [loginSubmitting, setLoginSubmitting] = useState(false);
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
 
@@ -85,6 +89,12 @@ export default function ProfilePage() {
     fetchUser();
   }, []);
 
+  const closePanel = () => {
+    setActivePanel(null);
+    loginForm.resetFields();
+    passwordForm.resetFields();
+  };
+
   const handleChangeLogin = async (values: {
     newLogin: string;
     currentPassword: string;
@@ -92,12 +102,15 @@ export default function ProfilePage() {
     setLoginSubmitting(true);
     try {
       await authService.changeLogin(values.newLogin, values.currentPassword);
-      setUser((prev) => (prev ? { ...prev, loginName: values.newLogin } : prev));
+      setUser((prev) =>
+        prev ? { ...prev, loginName: values.newLogin } : prev,
+      );
       message.success("Логин успешно изменён");
-      setLoginModalOpen(false);
-      loginForm.resetFields();
+      closePanel();
     } catch (err: any) {
-      message.error(err?.response?.data?.message ?? "Не удалось изменить логин");
+      message.error(
+        err?.response?.data?.message ?? "Не удалось изменить логин",
+      );
     } finally {
       setLoginSubmitting(false);
     }
@@ -110,14 +123,16 @@ export default function ProfilePage() {
   }) => {
     setPasswordSubmitting(true);
     try {
-      await authService.changePassword(values.currentPassword, values.newPassword);
-      message.success("Пароль изменён. Сейчас вы будете разлогинены.");
-      setPasswordModalOpen(false);
-      passwordForm.resetFields();
-      // Бэкенд уже сбросил все сессии — синхронизируем клиент и уводим на /login
-      setTimeout(() => authService.logout(), 1200);
+      await authService.changePassword(
+        values.currentPassword,
+        values.newPassword,
+      );
+      message.success("Пароль изменён. Другие устройства разлогинены.");
+      closePanel();
     } catch (err: any) {
-      message.error(err?.response?.data?.message ?? "Не удалось изменить пароль");
+      message.error(
+        err?.response?.data?.message ?? "Не удалось изменить пароль",
+      );
     } finally {
       setPasswordSubmitting(false);
     }
@@ -142,12 +157,9 @@ export default function ProfilePage() {
           boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
         }}
       >
-        {/* Баннер — единственный яркий элемент карточки */}
         <div
           style={{
             height: 120,
-            background:
-              "linear-gradient(135deg, #312E81 0%, #4338CA 45%, #0EA5A4 100%)",
             backgroundImage:
               "radial-gradient(circle at 85% 20%, rgba(255,255,255,0.12) 0%, transparent 45%), linear-gradient(135deg, #312E81 0%, #4338CA 45%, #0EA5A4 100%)",
           }}
@@ -155,7 +167,13 @@ export default function ProfilePage() {
 
         <div style={{ padding: "0 32px 32px", textAlign: "center" }}>
           {loading ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
               <Skeleton.Avatar active size={96} style={{ marginTop: -48 }} />
               <Skeleton
                 active
@@ -216,150 +234,166 @@ export default function ProfilePage() {
 
               <Divider style={{ margin: "24px 0 16px" }} />
 
-              <Space size={12}>
-                <Button icon={<EditOutlined />} onClick={() => setLoginModalOpen(true)}>
-                  Изменить логин
-                </Button>
-                <Button icon={<LockOutlined />} onClick={() => setPasswordModalOpen(true)}>
-                  Изменить пароль
-                </Button>
-              </Space>
+              {activePanel === null && (
+                <Space size={12}>
+                  <Button
+                    icon={<EditOutlined />}
+                    onClick={() => setActivePanel("login")}
+                  >
+                    Изменить логин
+                  </Button>
+                  <Button
+                    icon={<LockOutlined />}
+                    onClick={() => setActivePanel("password")}
+                  >
+                    Изменить пароль
+                  </Button>
+                </Space>
+              )}
+
+              {activePanel === "login" && (
+                <div
+                  style={{
+                    textAlign: "left",
+                    background: "#F8F8FC",
+                    borderRadius: 12,
+                    padding: 20,
+                    animation: "profileFadeIn .25s ease",
+                  }}
+                >
+                  <Form
+                    form={loginForm}
+                    layout="vertical"
+                    onFinish={handleChangeLogin}
+                    requiredMark={false}
+                  >
+                    <Form.Item
+                      name="newLogin"
+                      label="Новый логин"
+                      rules={[
+                        { required: true, message: "Введите новый логин" },
+                        { min: 3, message: "Минимум 3 символа" },
+                      ]}
+                    >
+                      <Input placeholder="Например, ivanov.i" autoFocus />
+                    </Form.Item>
+                    <Form.Item
+                      name="currentPassword"
+                      label="Текущий пароль"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Введите пароль для подтверждения",
+                        },
+                      ]}
+                    >
+                      <Input.Password placeholder="••••••••" />
+                    </Form.Item>
+                    <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
+                      <Button onClick={closePanel} style={{ marginRight: 8 }}>
+                        Отмена
+                      </Button>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={loginSubmitting}
+                        style={{ background: ACCENT, borderColor: ACCENT }}
+                      >
+                        Сохранить
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </div>
+              )}
+
+              {activePanel === "password" && (
+                <div
+                  style={{
+                    textAlign: "left",
+                    background: "#F8F8FC",
+                    borderRadius: 12,
+                    padding: 20,
+                    animation: "profileFadeIn .25s ease",
+                  }}
+                >
+                  <Form
+                    form={passwordForm}
+                    layout="vertical"
+                    onFinish={handleChangePassword}
+                    requiredMark={false}
+                  >
+                    <Form.Item
+                      name="currentPassword"
+                      label="Текущий пароль"
+                      rules={[
+                        { required: true, message: "Введите текущий пароль" },
+                      ]}
+                    >
+                      <Input.Password placeholder="••••••••" autoFocus />
+                    </Form.Item>
+                    <Form.Item
+                      name="newPassword"
+                      label="Новый пароль"
+                      rules={[
+                        { required: true, message: "Введите новый пароль" },
+                        { min: 6, message: "Минимум 6 символов" },
+                      ]}
+                    >
+                      <Input.Password placeholder="••••••••" />
+                    </Form.Item>
+                    <Form.Item
+                      name="confirmPassword"
+                      label="Повторите новый пароль"
+                      dependencies={["newPassword"]}
+                      rules={[
+                        { required: true, message: "Повторите новый пароль" },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (
+                              !value ||
+                              getFieldValue("newPassword") === value
+                            ) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(
+                              new Error("Пароли не совпадают"),
+                            );
+                          },
+                        }),
+                      ]}
+                    >
+                      <Input.Password placeholder="••••••••" />
+                    </Form.Item>
+                    <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
+                      <Button onClick={closePanel} style={{ marginRight: 8 }}>
+                        Отмена
+                      </Button>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={passwordSubmitting}
+                        style={{ background: ACCENT, borderColor: ACCENT }}
+                      >
+                        Сохранить
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </div>
+              )}
             </div>
           )}
         </div>
+        <div style={{ textAlign: "center", marginTop: 24 }}>
+          <Button
+            type="primary"
+            danger
+            icon={<LogoutOutlined />}
+            onClick={() => authService.logout()}
+          >
+            Выйти из аккаунта
+          </Button>
+        </div>
       </Card>
-
-      {/* Смена логина */}
-      <Modal
-        title="Изменить логин"
-        open={loginModalOpen}
-        onCancel={() => {
-          setLoginModalOpen(false);
-          loginForm.resetFields();
-        }}
-        footer={null}
-        destroyOnHidden
-      >
-        <Form
-          form={loginForm}
-          layout="vertical"
-          onFinish={handleChangeLogin}
-          requiredMark={false}
-          style={{ marginTop: 16 }}
-        >
-          <Form.Item
-            name="newLogin"
-            label="Новый логин"
-            rules={[
-              { required: true, message: "Введите новый логин" },
-              { min: 3, message: "Минимум 3 символа" },
-            ]}
-          >
-            <Input placeholder="Например, ivanov.i" autoFocus />
-          </Form.Item>
-          <Form.Item
-            name="currentPassword"
-            label="Текущий пароль"
-            rules={[{ required: true, message: "Введите пароль для подтверждения" }]}
-          >
-            <Input.Password placeholder="••••••••" />
-          </Form.Item>
-          <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
-            <Button
-              onClick={() => {
-                setLoginModalOpen(false);
-                loginForm.resetFields();
-              }}
-              style={{ marginRight: 8 }}
-            >
-              Отмена
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={loginSubmitting}
-              style={{ background: ACCENT, borderColor: ACCENT }}
-            >
-              Сохранить
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* Смена пароля */}
-      <Modal
-        title="Изменить пароль"
-        open={passwordModalOpen}
-        onCancel={() => {
-          setPasswordModalOpen(false);
-          passwordForm.resetFields();
-        }}
-        footer={null}
-        destroyOnHidden
-      >
-        <Form
-          form={passwordForm}
-          layout="vertical"
-          onFinish={handleChangePassword}
-          requiredMark={false}
-          style={{ marginTop: 16 }}
-        >
-          <Form.Item
-            name="currentPassword"
-            label="Текущий пароль"
-            rules={[{ required: true, message: "Введите текущий пароль" }]}
-          >
-            <Input.Password placeholder="••••••••" autoFocus />
-          </Form.Item>
-          <Form.Item
-            name="newPassword"
-            label="Новый пароль"
-            rules={[
-              { required: true, message: "Введите новый пароль" },
-              { min: 6, message: "Минимум 6 символов" },
-            ]}
-          >
-            <Input.Password placeholder="••••••••" />
-          </Form.Item>
-          <Form.Item
-            name="confirmPassword"
-            label="Повторите новый пароль"
-            dependencies={["newPassword"]}
-            rules={[
-              { required: true, message: "Повторите новый пароль" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("newPassword") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error("Пароли не совпадают"));
-                },
-              }),
-            ]}
-          >
-            <Input.Password placeholder="••••••••" />
-          </Form.Item>
-          <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
-            <Button
-              onClick={() => {
-                setPasswordModalOpen(false);
-                passwordForm.resetFields();
-              }}
-              style={{ marginRight: 8 }}
-            >
-              Отмена
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={passwordSubmitting}
-              style={{ background: ACCENT, borderColor: ACCENT }}
-            >
-              Сохранить
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 }

@@ -104,14 +104,9 @@ export default function Navbar() {
               <span style={{ color: "rgba(255, 255, 255, 0.85)" }}>{auth.loginName}</span>
 
               {pathname === "/profile" ? (
-                <Button
-                  type="default"
-                  danger
-                  icon={<LogoutOutlined />}
-                  onClick={handleLogout}
-                >
-                  Выйти
-                </Button>
+                <Link href="/">
+                  <Button type="primary">На главную</Button>
+                </Link>
               ) : (
                 <Link href="/profile">
                   <Button type="primary">Профиль</Button>

@@ -87,11 +87,22 @@ export const authService = {
     }
   },
 
-  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
-    await $api.post("/auth/change-password", { currentPassword, newPassword });
+  async changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const currentRefreshToken = Cookies.get("refreshToken");
+    await $api.post("/auth/change-password", {
+      currentPassword,
+      newPassword,
+      currentRefreshToken,
+    });
   },
 
-  async changeLogin(newLogin: string, currentPassword: string): Promise<TokenResponse> {
+  async changeLogin(
+    newLogin: string,
+    currentPassword: string,
+  ): Promise<TokenResponse> {
     const response = await $api.post<TokenResponse>("/auth/change-login", {
       newLogin,
       currentPassword,

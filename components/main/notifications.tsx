@@ -13,7 +13,7 @@ export const Notifications = () => {
     error,
   } = useQuery({
     queryKey: ["notifications"],
-    queryFn: async () => (await $api.get("/admin/posts")).data, 
+    queryFn: async () => (await $api.get("/admin/posts/public")).data, 
   });
 
   const truncateText = (text: string, limit: number) => {

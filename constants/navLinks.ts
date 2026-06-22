@@ -37,7 +37,7 @@ export const NAV_LINKS = [
   {
     key: "docs-sub",
     label: "Бланки",
-    roles: ["Worker", "Admin", "SuperAdmin"],
+    roles: ["Admin", "SuperAdmin", "Worker"],
     children: DOC_FILES.map(file => ({
       ...file,
       isDownload: true
@@ -46,10 +46,10 @@ export const NAV_LINKS = [
   {
     key: "bids-sub",
     label: "Заявки",
-    roles: ["Admin", "SuperAdmin", "Worker"],
+    roles: ["Admin", "SuperAdmin"],
     children: [
       { key: "/bids/create", label: "Создать", roles: ["Admin", "SuperAdmin"] },
-      { key: "/documents", label: "Архив заявок", roles: ["Admin", "SuperAdmin", "Worker"] }
+      { key: "/documents", label: "Архив заявок", roles: ["Admin", "SuperAdmin"] }
     ]
   }
 ];

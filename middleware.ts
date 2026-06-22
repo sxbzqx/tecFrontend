@@ -10,6 +10,7 @@ const ROUTE_PERMISSIONS: { [key: string]: string[] } = {
   "/chat": ["SuperAdmin", "Admin", "Worker"],
   "/documents": ["SuperAdmin", "Admin", "Worker"],
   "/profile": ["SuperAdmin", "Admin", "Worker"],
+  "/bids": ["SuperAdmin", "Admin"]
 };
 
 function getRoleFromToken(token: string | undefined): string | null {

@@ -22,16 +22,12 @@ export default function NewsPage() {
     );
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px", }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px" }}>
       <Title level={2}>Новости ТЭЦ</Title>
 
       <Flex vertical gap="middle">
         {posts.map((post: any) => (
-          <Card
-            key={post.id} 
-            hoverable
-            title={post.title}
-          >
+          <Card key={post.id} hoverable title={post.title}>
             <Paragraph ellipsis={{ rows: 3 }}>{post.content}</Paragraph>
             <Link href={`/news/${post.id}`}>Читать далее</Link>
           </Card>

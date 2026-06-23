@@ -63,8 +63,6 @@ $api.interceptors.response.use(
       try {
         const refreshToken = Cookies.get("refreshToken");
         if (!refreshToken) throw new Error("Нет рефреш токена в куках");
-
-        console.log("[Axios] Запускаем ЕДИНСТВЕННЫЙ тихий рефреш...");
         
         const res = await axios.post(`${API_URL}/auth/refresh`, { 
           refreshToken: refreshToken.trim() 
@@ -79,9 +77,6 @@ $api.interceptors.response.use(
 
         Cookies.set("accessToken", accessToken, { expires: 1, secure: isProd, sameSite: "strict", path: "/" });
         Cookies.set("refreshToken", newRefreshToken, { expires: 7, secure: isProd, sameSite: "strict", path: "/" });
-
-        console.log("[Axios] Сессия успешно обновлена первого запроса!");
-        
         
         processQueue(null, accessToken);
         

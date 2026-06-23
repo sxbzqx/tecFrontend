@@ -1,206 +1,148 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { authService } from "@/services/authService";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Input, Button, Alert, Typography, Form, Card, Select } from "antd";
+import { Input, Button, Alert, Form, Select } from "antd";
 import { UserOutlined, MailOutlined, LockOutlined, ApartmentOutlined } from "@ant-design/icons";
-import { $api } from "@/api/api";
+import { authService } from "@/services/authService";
+import { useAuth } from "@/hooks/useAuth";
+import { useDepartments } from "@/hooks/useDepartments";
+import { getApiErrorMessage } from "@/utils/apiError";
+import AuthShell from "@/components/auth/AuthShell";
 
-const { Title, Text } = Typography;
+interface RegisterFormValues {
+  login: string;
+  mail: string;
+  otdelId: number;
+  password: string;
+  confirmPassword: string;
+}
 
 export default function RegisterPage() {
   const router = useRouter();
   const { refreshAuth } = useAuth();
-  const [form] = Form.useForm();
-  const [error, setError] = useState("");
+  const [form] = Form.useForm<RegisterFormValues>();
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [otdels, setOtdels] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchOtdels = async () => {
-      try {
-        const response = await $api.get("/auth/otdels");
-        setOtdels(response.data);
-      } catch (err) {
-        console.error("Ошибка загрузки отделов:", err);
-      }
-    };
-    fetchOtdels();
-  }, []);
+  const { data: otdels = [], isLoading: otdelsLoading } = useDepartments();
 
-  const onFinish = async (values: any) => {
-    setError("");
-    const { login, mail, password, otdelId } = values;
-
+  const onFinish = async ({ login, mail, password, otdelId }: RegisterFormValues) => {
+    setError(null);
+    setLoading(true);
     try {
-      setLoading(true);
       await authService.register(login.trim(), password, mail.trim(), otdelId);
       await refreshAuth();
       router.push("/");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Ошибка при регистрации:", err);
-      setError(
-        err.response?.data?.message || "Произошла ошибка при регистрации",
-      );
+      setError(getApiErrorMessage(err, "Произошла ошибка при регистрации"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#f5f5f5",
-        padding: "0 16px",
-      }}
+    <AuthShell
+      title="Создание аккаунта"
+      subtitleText="Уже есть аккаунт?"
+      subtitleLinkHref="/login"
+      subtitleLinkText="Войдите"
     >
-      <Card
-        variant="borderless"
-        style={{
-          width: "100%",
-          maxWidth: "400px",
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.05)",
-          borderRadius: "12px",
-          padding: "8px",
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <Title
-            level={3}
-            style={{ margin: 0, fontWeight: 600, letterSpacing: "-0.5px" }}
-          >
-            Создание аккаунта
-          </Title>
-          <Text
-            type="secondary"
-            style={{ fontSize: "14px", marginTop: "8px", display: "block" }}
-          >
-            Или{" "}
-            <Link href="/login" style={{ color: "#1677ff", fontWeight: 500 }}>
-              войдите в существующий профиль
-            </Link>
-          </Text>
-        </div>
+      <Form form={form} layout="vertical" onFinish={onFinish} requiredMark={false} size="large">
+        {error && (
+          <Form.Item style={{ marginBottom: 20 }}>
+            <Alert message={error} type="error" showIcon closable onClose={() => setError(null)} />
+          </Form.Item>
+        )}
 
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          requiredMark={false}
-          size="large"
+        <Form.Item name="login" label="Логин" rules={[{ required: true, message: "Пожалуйста, введите логин" }]}>
+          <Input
+            prefix={<UserOutlined style={{ color: "#bfbfbf" }} />}
+            placeholder="Придумайте логин"
+            disabled={loading}
+            autoComplete="username"
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="mail"
+          label="Электронная почта"
+          rules={[
+            { required: true, message: "Пожалуйста, введите почту" },
+            { type: "email", message: "Введите корректный email-адрес" },
+          ]}
         >
-          {error && (
-            <Form.Item style={{ marginBottom: "20px" }}>
-              <Alert message={error} type="error" showIcon />
-            </Form.Item>
-          )}
+          <Input
+            prefix={<MailOutlined style={{ color: "#bfbfbf" }} />}
+            placeholder="name@example.com"
+            disabled={loading}
+            autoComplete="email"
+          />
+        </Form.Item>
 
-          <Form.Item
-            name="login"
-            label="Логин"
-            rules={[
-              { required: true, message: "Пожалуйста, введите логин" },
-              { transform: (value) => value?.trim() },
-            ]}
+        <Form.Item name="otdelId" label="Ваш отдел" rules={[{ required: true, message: "Пожалуйста, выберите отдел" }]}>
+          <Select
+            placeholder="Выберите отдел"
+            disabled={loading}
+            loading={otdelsLoading}
+            showSearch
+            optionFilterProp="label"
+            suffixIcon={<ApartmentOutlined />}
+            options={otdels.map((o) => ({ value: o.id, label: o.nameOtd }))}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="password"
+          label="Пароль"
+          rules={[
+            { required: true, message: "Пожалуйста, задайте пароль" },
+            { min: 6, message: "Пароль должен быть не менее 6 символов" },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined style={{ color: "#bfbfbf" }} />}
+            placeholder="••••••••"
+            disabled={loading}
+            autoComplete="new-password"
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="confirmPassword"
+          label="Подтверждение пароля"
+          dependencies={["password"]}
+          rules={[
+            { required: true, message: "Пожалуйста, повторите пароль" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) return Promise.resolve();
+                return Promise.reject(new Error("Пароли не совпадают"));
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined style={{ color: "#bfbfbf" }} />}
+            placeholder="••••••••"
+            disabled={loading}
+            autoComplete="new-password"
+          />
+        </Form.Item>
+
+        <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            loading={loading}
+            style={{ borderRadius: 8, fontWeight: 500, background: "#534AB7", borderColor: "#534AB7", height: 44 }}
           >
-            <Input
-              prefix={<UserOutlined style={{ color: "#bfbfbf" }} />}
-              placeholder="Придумайте логин"
-              disabled={loading}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="mail"
-            label="Электронная почта"
-            rules={[
-              { required: true, message: "Пожалуйста, введите почту" },
-              { type: "email", message: "Введите корректный email-адрес" },
-            ]}
-          >
-            <Input
-              prefix={<MailOutlined style={{ color: "#bfbfbf" }} />}
-              placeholder="name@example.com"
-              disabled={loading}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="otdelId"
-            label="Ваш отдел"
-            rules={[{ required: true, message: "Пожалуйста, выберите отдел" }]}
-          >
-            <Select 
-              placeholder="Выберите отдел" 
-              disabled={loading}
-              suffixIcon={<ApartmentOutlined />}
-            >
-              {otdels.map((o) => (
-                <Select.Option key={o.id} value={o.id}>
-                  {o.nameOtd}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            label="Пароль"
-            rules={[
-              { required: true, message: "Пожалуйста, задайте пароль" },
-              { min: 6, message: "Пароль должен быть не менее 6 символов" },
-            ]}
-          >
-            <Input.Password
-              prefix={<LockOutlined style={{ color: "#bfbfbf" }} />}
-              placeholder="••••••••"
-              disabled={loading}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="confirmPassword"
-            label="Подтверждение пароля"
-            dependencies={["password"]}
-            rules={[
-              { required: true, message: "Пожалуйста, повторите пароль" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error("Пароли не совпадают"));
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              prefix={<LockOutlined style={{ color: "#bfbfbf" }} />}
-              placeholder="••••••••"
-              disabled={loading}
-            />
-          </Form.Item>
-
-          <Form.Item style={{ marginBottom: 0, marginTop: "24px" }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-              loading={loading}
-              style={{ borderRadius: "6px", fontWeight: 500 }}
-            >
-              {loading ? "Регистрация..." : "Зарегистрироваться"}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-    </div>
+            {loading ? "Регистрация..." : "Зарегистрироваться"}
+          </Button>
+        </Form.Item>
+      </Form>
+    </AuthShell>
   );
 }

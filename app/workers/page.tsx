@@ -19,7 +19,6 @@ import { PrinterOutlined, SearchOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
 
 const fetchWorkers = async () => {
-  console.log("React Query отправляет запрос на /workers");
   const response = await $api.get<Worker[]>("/workers");
   return response.data;
 };

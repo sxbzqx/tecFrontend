@@ -3,8 +3,8 @@ import { departmentService } from "@/services/departmentService";
 
 export const useDepartments = () => {
   return useQuery({
-    queryKey: ["departments"],
+    queryKey: ["departments", "public"],
     queryFn: departmentService.getAll,
-    staleTime: 60000, // Кэшируем на 1 минуту
+    staleTime: 5 * 60000, 
   });
 };

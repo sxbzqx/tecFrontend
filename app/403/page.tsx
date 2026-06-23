@@ -8,7 +8,7 @@ export default function ForbiddenPage() {
   const router = useRouter();
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#f5f5f5" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#f5f5f5" }}>
       <Result
         status="403"
         title="403: Доступ ограничен"

@@ -70,7 +70,7 @@ export const authService = {
     } finally {
       Cookies.remove("accessToken", { path: "/" });
       Cookies.remove("refreshToken", { path: "/" });
-      if (typeof window !== "undefined") window.location.href = "/login";
+      if (typeof window !== "undefined") window.location.href = "/";
     }
   },
 

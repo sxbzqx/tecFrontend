@@ -59,7 +59,7 @@ export default function BusinessPlansList() {
   if (error) return <Alert message="Ошибка загрузки" description={(error as Error).message} type="error" showIcon />;
 
   return (
-    <div style={{ padding: "24px", backgroundColor: "#f4f6f8", minHeight: "100vh" }}>
+    <div style={{ padding: "24px", backgroundColor: "#f4f6f8"}}>
       <Title level={2}>Реестр бизнес-планов</Title>
 
       {/* Панель фильтров */}

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import styles from "@/components/main/Main.module.css";
+import { Collapse } from "antd";
+import styles from "@/components/styles/Main.module.css";
 import Paragraph from "antd/es/typography/Paragraph";
 
 const FAQ_ITEMS = [
@@ -49,4 +50,13 @@ const FAQ_ITEMS = [
   },
 ];
 
-export default FAQ_ITEMS;
+export default function FAQ() {
+  return (
+    <Collapse
+      items={FAQ_ITEMS}
+      defaultActiveKey={["1"]}
+      accordion
+      className={styles.faqCollapse}
+    />
+  );
+}

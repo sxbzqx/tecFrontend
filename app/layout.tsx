@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Providers from './providers';
 import Navbar from "@/components/navbar/Navbar";
-import FooterWrapper from '@/components/navbar/FooterWrapper';
+import FooterWrapper from '@/components/navbar/Footer';
 import { Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { AuthProvider } from '@/context/AuthContext';

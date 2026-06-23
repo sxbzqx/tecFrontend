@@ -1,0 +1,402 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.ant-layout {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ── Container ── */
+.container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 40px 64px;
+  overflow-x: hidden;
+}
+
+/* ── Hero ── */
+.hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 44px 0 36px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.heroLeft { display: flex; flex-direction: column; gap: 10px; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #534AB7;
+  background: #EEEDFE;
+  padding: 4px 12px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.heroTitle {
+  font-size: 34px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.heroSub {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.heroRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.dateChip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.dateIcon { font-size: 14px; color: #534AB7; }
+
+.statusPill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #0F6E56;
+  background: #E1F5EE;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1D9E75;
+  flex-shrink: 0;
+}
+
+/* ── Stats ── */
+.statsRow { margin-bottom: 20px !important; }
+
+.statCard {
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 20px 22px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .22s ease, box-shadow .22s ease;
+  cursor: default;
+}
+
+.statCard::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent, #534AB7);
+  border-radius: 16px 16px 0 0;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px -8px rgba(0,0,0,.09);
+}
+
+.statIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+.statValue {
+  font-size: 28px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: #334155;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.statHint {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 7px;
+}
+
+/* ── Universal section card ── */
+.sectionCard {
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,.03);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.sectionTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.sectionIcon, .sectionIconActivity, .sectionIconChart {
+  font-size: 16px;
+  color: #534AB7;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.countBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #534AB7;
+  background: #EEEDFE;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* ── Ant Table overrides ── */
+.sectionCard :global(.ant-table-thead > tr > th) {
+  background: #f8fafc !important;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8 !important;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 11px 20px !important;
+}
+
+.sectionCard :global(.ant-table-tbody > tr > td) {
+  padding: 13px 20px !important;
+  border-bottom: 1px solid #f8fafc !important;
+  font-size: 13px;
+}
+
+.sectionCard :global(.ant-table-tbody > tr:hover > td) {
+  background: #fafbff !important;
+}
+
+.sectionCard :global(.ant-table-tbody > tr:last-child > td) {
+  border-bottom: none !important;
+}
+
+/* ── Notifications (card inside sectionCard) ── */
+.sectionCard :global(.ant-card) {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.sectionCard :global(.ant-card-head) {
+  padding: 16px 22px !important;
+  border-bottom: 1px solid #f8fafc !important;
+  min-height: unset !important;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.sectionCard :global(.ant-card-body) {
+  padding: 14px 22px !important;
+}
+
+/* ── Collapse / FAQ ── */
+.faqInner { padding: 0; }
+.faqInner > div { width: 100% !important; margin-top: 0 !important; }
+
+.sectionCard :global(.ant-collapse) {
+  border-radius: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.sectionCard :global(.ant-collapse-item) {
+  border-bottom: 1px solid #f8fafc !important;
+}
+
+.sectionCard :global(.ant-collapse-item:last-child) {
+  border-bottom: none !important;
+}
+
+.sectionCard :global(.ant-collapse-header) {
+  padding: 15px 22px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+}
+
+.sectionCard :global(.ant-collapse-content-box) {
+  padding: 4px 22px 16px !important;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ── Activity feed ── */
+.activityRow {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 22px;
+  border-bottom: 1px solid #f8fafc;
+  transition: background .15s;
+}
+
+.activityRow:last-child { border-bottom: none; }
+.activityRow:hover { background: #fafbff; }
+
+.activityIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.activityBody { flex: 1; min-width: 0; }
+
+.activityTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activitySub {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 2px 0 0;
+}
+
+.activityTime {
+  font-size: 11px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+/* ── Birthday chart ── */
+.chartWrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 18px 22px 16px;
+  height: 110px;
+}
+
+.chartCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.chartBar {
+  width: 100%;
+  background: #EEEDFE;
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height .3s ease;
+}
+
+.chartBarActive { background: #534AB7; }
+
+.chartLabel {
+  font-size: 9px;
+  color: #94a3b8;
+  margin-top: 5px;
+  white-space: nowrap;
+}
+
+.chartLabelActive {
+  color: #534AB7;
+  font-weight: 600;
+}
+
+.chartCount {
+  font-size: 10px;
+  color: transparent;
+  margin-bottom: 3px;
+  height: 12px;
+  display: block;
+}
+
+.chartCountActive { color: #534AB7; font-weight: 600; }
+
+/* ── Pulse animation (kept for compat) ── */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.pulseTag { animation: pulse 2s infinite; font-weight: 600; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .container { padding: 0 16px 40px; }
+  .hero { padding: 28px 0 24px; flex-direction: column; }
+  .heroTitle { font-size: 24px; }
+  .heroRight { align-self: stretch; align-items: stretch; }
+  .dateChip { justify-content: center; }
+}

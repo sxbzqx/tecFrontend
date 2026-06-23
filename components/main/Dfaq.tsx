@@ -5,20 +5,9 @@ import { Collapse } from "antd";
 import styles from "@/components/styles/Main.module.css";
 import Paragraph from "antd/es/typography/Paragraph";
 
-const FAQ_ITEMS = [
+const DFAQ_ITEMS = [
   {
     key: "1",
-    label: "Как войти в систему?",
-    children: (
-      <Paragraph className={styles.faqAnswer}>
-        Нажмите на <Link href="/login">Вход</Link> в меню и используйте логин и пароль,
-        если нет аккаунта,  <Link href="/register">зарегистрируйтесь</Link>. Если возникли проблемы — обратитесь
-        к администратору.
-      </Paragraph>
-    ),
-  },
-  {
-    key: "2",
     label: "Где посмотреть новости и объявления?",
     children: (
       <Paragraph className={styles.faqAnswer}>
@@ -28,7 +17,7 @@ const FAQ_ITEMS = [
     ),
   },
   {
-    key: "3",
+    key: "2",
     label: "Как отправить предложение по улучшению?",
     children: (
       <Paragraph className={styles.faqAnswer}>
@@ -38,7 +27,7 @@ const FAQ_ITEMS = [
     ),
   },
   {
-    key: "4",
+    key: "3",
     label: "Как обновить данные профиля?",
     children: (
       <Paragraph className={styles.faqAnswer}>
@@ -50,10 +39,10 @@ const FAQ_ITEMS = [
   },
 ];
 
-export default function FAQ() {
+export default function DFAQ() {
   return (
     <Collapse
-      items={FAQ_ITEMS}
+      items={DFAQ_ITEMS}
       accordion
       className={styles.faqCollapse}
     />

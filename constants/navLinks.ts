@@ -18,11 +18,6 @@ export const NAV_LINKS = [
     children: [
       { key: "/admin/users", label: "Управление ролями", roles: ["SuperAdmin", "Admin"] },
       { key: "/admin/news", label: "Управление новостями", roles: ["SuperAdmin", "Admin"] },
-      {
-        key: "/biznesplan",
-        label: "Бизнес-Планы",
-        roles: ["SuperAdmin", "Admin"],
-      },
     ],
   },
   {

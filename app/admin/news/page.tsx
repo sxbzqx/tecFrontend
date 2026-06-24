@@ -16,7 +16,7 @@ import {
   Popconfirm,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 import { Post } from "@/types/post";
 
 const { Title } = Typography;

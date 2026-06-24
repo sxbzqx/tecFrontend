@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 import { Biznesplan } from "@/types/biznesplan";
 import { Spin, Alert, Table, Input, Select, Typography, Space } from "antd";
 

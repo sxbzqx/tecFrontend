@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { $api } from "@/api/api"; // Используем ваш axios инстанс
+import { $api } from "@/app/api/api"; // Используем ваш axios инстанс
 import { Typography, Spin, Table, Select, Button, Space, message, Row, Col } from "antd";
 import { PrinterOutlined, ReloadOutlined } from "@ant-design/icons";
 import { Document } from "@/types/document";

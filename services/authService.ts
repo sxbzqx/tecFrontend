@@ -1,11 +1,4 @@
-import { $api } from "@/api/api";
-import Cookies from "js-cookie";
-
-interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-  role?: string;
-}
+import { $api } from "@/app/api/api";
 
 interface CurrentUser {
   role: string;
@@ -13,35 +6,31 @@ interface CurrentUser {
   department: string;
 }
 
-const isProd = process.env.NODE_ENV === "production";
+interface ApiErrorPayload {
+  message?: string;
+  Message?: string;
+  errors?: Record<string, string[]>;
+}
 
-function setAuthCookies(accessToken: string, refreshToken: string) {
-  Cookies.set("accessToken", accessToken, {
-    expires: 1,
-    secure: isProd,
-    sameSite: "strict",
-    path: "/",
-  });
-  Cookies.set("refreshToken", refreshToken, {
-    expires: 7,
-    secure: isProd,
-    sameSite: "strict",
-    path: "/",
+function throwAsResponseError(data: ApiErrorPayload | null, status: number, fallback: string): never {
+  throw Object.assign(new Error(data?.message || data?.Message || fallback), {
+    response: { data: data ?? { message: fallback }, status },
   });
 }
 
 export const authService = {
-  async login(loginStr: string, passwordStr: string): Promise<TokenResponse> {
-    const response = await $api.post<TokenResponse>("/auth/login", {
-      login: loginStr,
-      password: passwordStr,
+  async login(loginStr: string, passwordStr: string): Promise<void> {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ login: loginStr, password: passwordStr }),
     });
 
-    const { accessToken, refreshToken } = response.data;
-    if (accessToken && refreshToken) {
-      setAuthCookies(accessToken, refreshToken);
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throwAsResponseError(data, response.status, "Неверный логин или пароль");
     }
-    return response.data;
   },
 
   async register(
@@ -49,27 +38,33 @@ export const authService = {
     passwordStr: string,
     mailStr: string,
     otdelId: string | number,
-  ): Promise<TokenResponse> {
-    await $api.post("/auth/register", {
-      login: loginStr,
-      password: passwordStr,
-      mail: mailStr,
-      otdelId: Number(otdelId),
+  ): Promise<void> {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        login: loginStr,
+        password: passwordStr,
+        mail: mailStr,
+        otdelId: Number(otdelId),
+      }),
     });
 
-    return this.login(loginStr, passwordStr);
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throwAsResponseError(data, response.status, "Произошла ошибка при регистрации");
+    }
+
+    await this.login(loginStr, passwordStr);
   },
 
   async logout(): Promise<void> {
     try {
-      const refreshToken = Cookies.get("refreshToken");
-      if (refreshToken)
-        await $api.post("/auth/logout", { refreshToken: refreshToken.trim() });
+      await fetch("/api/auth/logout", { method: "POST" });
     } catch (err) {
       console.error("Ошибка при логауте:", err);
     } finally {
-      Cookies.remove("accessToken", { path: "/" });
-      Cookies.remove("refreshToken", { path: "/" });
       if (typeof window !== "undefined") window.location.href = "/";
     }
   },
@@ -87,35 +82,31 @@ export const authService = {
     }
   },
 
-  async changePassword(
-    currentPassword: string,
-    newPassword: string,
-  ): Promise<void> {
-    const currentRefreshToken = Cookies.get("refreshToken");
-    await $api.post("/auth/change-password", {
-      currentPassword,
-      newPassword,
-      currentRefreshToken,
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    const response = await fetch("/api/auth/change-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentPassword, newPassword }),
     });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throwAsResponseError(data, response.status, "Не удалось изменить пароль");
+    }
   },
 
-  async changeLogin(
-    newLogin: string,
-    currentPassword: string,
-  ): Promise<TokenResponse> {
-    const response = await $api.post<TokenResponse>("/auth/change-login", {
-      newLogin,
-      currentPassword,
+  async changeLogin(newLogin: string, currentPassword: string): Promise<void> {
+    const response = await fetch("/api/auth/change-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ newLogin, currentPassword }),
     });
 
-    const data = response.data as any;
-    const accessToken = data.accessToken || data.AccessToken;
-    const refreshToken = data.refreshToken || data.RefreshToken;
+    const data = await response.json().catch(() => null);
 
-    if (accessToken && refreshToken) {
-      setAuthCookies(accessToken, refreshToken);
+    if (!response.ok) {
+      throwAsResponseError(data, response.status, "Не удалось изменить логин");
     }
-
-    return response.data;
   },
 };

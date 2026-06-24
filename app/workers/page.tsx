@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Worker } from "@/types/worker";
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,

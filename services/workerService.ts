@@ -1,5 +1,5 @@
 
-import { $api } from "@/api/api"; 
+import { $api } from "@/app/api/api"; 
 import { Worker as IWorker } from "@/types/worker";
 
 

@@ -17,7 +17,7 @@ export default function FooterWrapper() {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "space-evenly",
           flexWrap: "wrap",
           gap: 12,
           maxWidth: 1320,

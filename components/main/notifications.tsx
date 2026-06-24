@@ -4,7 +4,7 @@ import { Button, Card, Spin, Alert } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 
 export const Notifications = () => {
   const {

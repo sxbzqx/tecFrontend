@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { message } from "antd";
 import { fetchUpcomingBirthdays } from "@/services/workerService";
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 import { Worker as IWorker } from "@/types/worker";
 
 export const useBirthday = () => {

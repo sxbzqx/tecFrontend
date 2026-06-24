@@ -14,7 +14,7 @@ import {
   Input,
 } from "antd";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 import { User } from "@/types/user";
 import { AxiosError } from "axios";
 

@@ -5,7 +5,10 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
 
   if (!body?.login || !body?.password || !body?.mail || body?.otdelId == null) {
-    return NextResponse.json({ message: "Заполнены не все поля" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Заполнены не все поля" },
+      { status: 400 },
+    );
   }
 
   let backendResponse: Response;

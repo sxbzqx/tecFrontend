@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
 import { apiBaseUrl } from "@/utils/config";
 import { extractTokens } from "@/utils/tokens";
-import { setAuthCookies, clearAuthCookies, getRefreshTokenCookie } from "@/utils/authCookies";
+import {
+  setAuthCookies,
+  clearAuthCookies,
+  getRefreshTokenCookie,
+} from "@/utils/authCookies";
 
 export async function POST() {
   const refreshToken = await getRefreshTokenCookie();
 
   if (!refreshToken) {
-    return NextResponse.json({ message: "Нет refresh-токена" }, { status: 401 });
+    return NextResponse.json(
+      { message: "Нет refresh-токена" },
+      { status: 401 },
+    );
   }
 
   let backendResponse: Response;
@@ -23,7 +30,10 @@ export async function POST() {
   }
 
   if (!backendResponse.ok) {
-    console.warn("[api/auth/refresh] Backend отверг refresh-токен:", backendResponse.status);
+    console.warn(
+      "[api/auth/refresh] Backend отверг refresh-токен:",
+      backendResponse.status,
+    );
     await clearAuthCookies();
     return NextResponse.json({ message: "Refresh не прошёл" }, { status: 401 });
   }
@@ -32,9 +42,15 @@ export async function POST() {
   const tokens = extractTokens(data);
 
   if (!tokens) {
-    console.error("[api/auth/refresh] Backend не вернул токены при refresh:", data);
+    console.error(
+      "[api/auth/refresh] Backend не вернул токены при refresh:",
+      data,
+    );
     await clearAuthCookies();
-    return NextResponse.json({ message: "Backend не вернул токены" }, { status: 502 });
+    return NextResponse.json(
+      { message: "Backend не вернул токены" },
+      { status: 502 },
+    );
   }
 
   await setAuthCookies(tokens.accessToken, tokens.refreshToken);

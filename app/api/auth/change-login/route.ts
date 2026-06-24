@@ -7,7 +7,10 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
 
   if (!body?.newLogin || !body?.currentPassword) {
-    return NextResponse.json({ message: "Заполнены не все поля" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Заполнены не все поля" },
+      { status: 400 },
+    );
   }
 
   const accessToken = await getAccessTokenCookie();
@@ -26,7 +29,10 @@ export async function POST(request: NextRequest) {
       }),
     });
   } catch (error) {
-    console.error("[api/auth/change-login] Не удалось связаться с backend:", error);
+    console.error(
+      "[api/auth/change-login] Не удалось связаться с backend:",
+      error,
+    );
     return NextResponse.json({ message: "Сервер недоступен" }, { status: 502 });
   }
 

@@ -13,7 +13,10 @@ export async function POST() {
         body: JSON.stringify({ refreshToken: refreshToken.trim() }),
       });
     } catch (error) {
-      console.error("[api/auth/logout] Не удалось оповестить backend о логауте:", error);
+      console.error(
+        "[api/auth/logout] Не удалось оповестить backend о логауте:",
+        error,
+      );
     }
   }
 

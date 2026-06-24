@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { apiBaseUrl } from "@/utils/config";
-import { getAccessTokenCookie, getRefreshTokenCookie } from "@/utils/authCookies";
+import {
+  getAccessTokenCookie,
+  getRefreshTokenCookie,
+} from "@/utils/authCookies";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
 
   if (!body?.currentPassword || !body?.newPassword) {
-    return NextResponse.json({ message: "Заполнены не все поля" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Заполнены не все поля" },
+      { status: 400 },
+    );
   }
 
   const [accessToken, refreshToken] = await Promise.all([
@@ -29,7 +35,10 @@ export async function POST(request: NextRequest) {
       }),
     });
   } catch (error) {
-    console.error("[api/auth/change-password] Не удалось связаться с backend:", error);
+    console.error(
+      "[api/auth/change-password] Не удалось связаться с backend:",
+      error,
+    );
     return NextResponse.json({ message: "Сервер недоступен" }, { status: 502 });
   }
 

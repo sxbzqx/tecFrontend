@@ -3,7 +3,7 @@
 import React from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 import { Typography, Spin, Card } from "antd";
 
 const { Title, Paragraph, Text } = Typography;

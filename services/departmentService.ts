@@ -1,4 +1,4 @@
-import { $api } from "@/api/api";
+import { $api } from "@/app/api/api";
 import { Department } from "@/types/department";
 
 export const departmentService = {

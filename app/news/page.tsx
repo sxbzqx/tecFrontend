@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { $api } from "@/api/api"; // Используем ваш axios инстанс
+import { $api } from "@/app/api/api"; // Используем ваш axios инстанс
 import { Typography, List, Card, Spin, Flex } from "antd";
 import Link from "next/link";
 

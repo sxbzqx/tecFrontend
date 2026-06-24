@@ -54,7 +54,6 @@ export default function FAQ() {
   return (
     <Collapse
       items={FAQ_ITEMS}
-      defaultActiveKey={["1"]}
       accordion
       className={styles.faqCollapse}
     />

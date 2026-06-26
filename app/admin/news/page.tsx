@@ -12,17 +12,19 @@ import {
   Typography,
   Card,
   Space,
-  message,
   Popconfirm,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { $api } from "@/app/api/api";
 import { Post } from "@/types/post";
 
+import { App } from "antd";
+
 const { Title } = Typography;
 const { TextArea } = Input;
 
 export default function AdminNewsPage() {
+  const { message } = App.useApp();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);

@@ -85,10 +85,6 @@ export default function HomePage() {
             <CalendarOutlined className={styles.dateIcon} />
             <span>{today}</span>
           </div>
-          <div className={styles.statusPill}>
-            <span className={styles.statusDot} />
-            Все системы работают
-          </div>
         </div>
       </div>
 

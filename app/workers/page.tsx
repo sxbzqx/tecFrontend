@@ -13,6 +13,7 @@ import {
   Typography,
   Alert,
   Space,
+  TableColumnsType,
 } from "antd";
 import { PrinterOutlined, SearchOutlined } from "@ant-design/icons";
 
@@ -63,12 +64,14 @@ export default function WorkersList() {
   };
 
   
-  const columns = [
+  const columns: TableColumnsType<Worker> = [
     { title: "Таб. №", dataIndex: "tabel", key: "tabel", width: 100 },
     {
       title: "ФИО",
       dataIndex: "fio",
       key: "fio",
+      sorter: (a, b) => a.fio.localeCompare(b.fio),
+      defaultSortOrder: 'ascend',
       render: (text: string) => <Text strong>{text}</Text>,
     },
     {

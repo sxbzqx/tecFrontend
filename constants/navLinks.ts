@@ -19,7 +19,7 @@ export const NAV_LINKS = [
       {
         key: "/admin/users",
         label: "Управление ролями",
-        roles: ["SuperAdmin", "Admin"],
+        roles: ["SuperAdmin"],
       },
       {
         key: "/admin/news",

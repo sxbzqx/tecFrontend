@@ -16,7 +16,7 @@ export default function PostPage() {
     queryFn: async () => (await $api.get(`/admin/posts/${id}`)).data,
     enabled: !!id, 
   });
-
+  
   if (isLoading) return <Spin size="large" style={{ display: 'block', marginTop: 50 }} />;
   if (error || !post) return <Title level={3}>Пост не найден</Title>;
 

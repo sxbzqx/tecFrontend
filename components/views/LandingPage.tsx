@@ -16,67 +16,89 @@ import styles from "@/components/styles/Main.module.css";
 import FAQ_ITEMS from "@/components/main/faq";
 import FEATURES from "@/components/main/features";
 import QUICK_LINKS from "@/components/main/quickLinks";
+import Image from "next/image";
+import tecMain from "@/public/tec-1920x600.jpg"
 
 const { Title, Paragraph, Text } = Typography;
 
+
 export default function HomePage() {
+
+  console.log(tecMain)
+
   return (
     <div className={styles.landingPage}>
       {/* ── Hero ── */}
       <section className={styles.hero}>
-        <Tag icon={<ThunderboltOutlined />} className={styles.heroBadge}>
-          Корпоративная система
-        </Tag>
+        {/* <div className={styles.bgOverlay} /> */}
 
-        <Title className={styles.heroTitle}>
-          Добро пожаловать в&nbsp;
-          <span className={styles.heroAccent}>МП Бишкек ТЭЦ</span>
-        </Title>
-
-        <Paragraph className={styles.heroSub}>
-          Единый портал для сотрудников теплоэлектроцентрали — новости,
-          документы и управление всё здесь
-        </Paragraph>
-
-        <div className={styles.heroBtns}>
-          <Link href="/news">
-            <Button
-              type="primary"
-              size="large"
-              icon={<ArrowRightOutlined />}
-              className={styles.btnPrimary}
-            >
-              Перейти в раздел
-            </Button>
-          </Link>
-          <Link href="/workers">
-            <Button size="large" className={styles.btnGhost}>
-              Узнать больше
-            </Button>
-          </Link>
+        <div className={styles.bgOverlay}>
+          <Image
+            src={tecMain}
+            alt="ТЭЦ"
+            fill
+            priority
+            quality={100} // Гарантия максимального качества
+            placeholder="empty"
+            unoptimized
+          />
         </div>
 
-        <div className={styles.heroStats}>
-          <div className={styles.heroStatItem}>
-            <span className={styles.heroStatVal}>1700+</span>
-            <span className={styles.heroStatLbl}>Сотрудников</span>
+        <div className={styles.heroContent}>
+          <Tag icon={<ThunderboltOutlined />} className={styles.heroBadge}>
+            Корпоративная система
+          </Tag>
+
+          <Title className={styles.heroTitle}>
+            Добро пожаловать в&nbsp;
+            <span className={styles.heroAccent}>МП Бишкек ТЭЦ</span>
+          </Title>
+
+          <Paragraph className={styles.heroSub}>
+            Единый портал для сотрудников теплоэлектроцентрали — новости,
+            документы и управление всё здесь
+          </Paragraph>
+
+          <div className={styles.heroBtns}>
+            <Link href="/news">
+              <Button
+                type="primary"
+                size="large"
+                icon={<ArrowRightOutlined />}
+                className={styles.btnPrimary}
+              >
+                Перейти в раздел
+              </Button>
+            </Link>
+            <Link href="/workers">
+              <Button size="large" className={styles.btnGhost}>
+                Узнать больше
+              </Button>
+            </Link>
           </div>
-          <div className={styles.heroStatDivider} />
-          <div className={styles.heroStatItem}>
-            <span className={styles.heroStatVal}>30+</span>
-            <span className={styles.heroStatLbl}>Отделов</span>
-          </div>
-          <div className={styles.heroStatDivider} />
-          <div className={styles.heroStatItem}>
-            <span className={styles.heroStatVal}>
-              {new Date().getFullYear() - 60}
-            </span>
-            <span className={styles.heroStatLbl}>Год основания</span>
-          </div>
-          <div className={styles.heroStatDivider} />
-          <div className={styles.heroStatItem}>
-            <span className={styles.heroStatVal}>24/7</span>
-            <span className={styles.heroStatLbl}>Работа системы</span>
+
+          <div className={styles.heroStats}>
+            <div className={styles.heroStatItem}>
+              <span className={styles.heroStatVal}>1700+</span>
+              <span className={styles.heroStatLbl}>Сотрудников</span>
+            </div>
+            <div className={styles.heroStatDivider} />
+            <div className={styles.heroStatItem}>
+              <span className={styles.heroStatVal}>30+</span>
+              <span className={styles.heroStatLbl}>Отделов</span>
+            </div>
+            <div className={styles.heroStatDivider} />
+            <div className={styles.heroStatItem}>
+              <span className={styles.heroStatVal}>
+                {new Date().getFullYear() - 60}
+              </span>
+              <span className={styles.heroStatLbl}>Год основания</span>
+            </div>
+            <div className={styles.heroStatDivider} />
+            <div className={styles.heroStatItem}>
+              <span className={styles.heroStatVal}>24/7</span>
+              <span className={styles.heroStatLbl}>Работа системы</span>
+            </div>
           </div>
         </div>
       </section>

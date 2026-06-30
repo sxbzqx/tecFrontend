@@ -46,7 +46,7 @@ export default function LoginPage() {
       <Form form={form} layout="vertical" onFinish={onFinish} requiredMark={false} size="large">
         {error && (
           <Form.Item style={{ marginBottom: 20 }}>
-            <Alert message={error} type="error" showIcon closable onClose={() => setError(null)} />
+            <Alert title={error} type="error" showIcon closable onClose={() => setError(null)} />
           </Form.Item>
         )}
 

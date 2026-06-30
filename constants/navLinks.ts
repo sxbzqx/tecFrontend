@@ -59,12 +59,40 @@ export const NAV_LINKS = [
     label: "Заявки",
     roles: ["Admin", "SuperAdmin"],
     children: [
-      { key: "/bids/create", label: "Создать", roles: ["Admin", "SuperAdmin"] },
+      // { key: "/bids/create", label: "Создать", roles: ["Admin", "SuperAdmin"] },
       {
-        key: "/documents",
+        key: "/bids/archive",
         label: "Архив заявок",
         roles: ["Admin", "SuperAdmin"],
       },
+    ],
+  },
+  {
+    key: "dev",
+    label: "В разработке",
+    roles: ["Guest", "Worker", "Admin", "SuperAdmin"],
+    children: [
+      {
+        key: "/map",
+        label: "Карта",
+        roles: ["Guest", "Worker", "Admin", "SuperAdmin"],
+      },
+      {
+        key: "/biznesplan",
+        label: "Бизнес-планы (Архив)",
+        roles: ["Guest", "Worker", "Admin", "SuperAdmin"],
+      },
+      {
+        key: "/bids/create",
+        label: "Создать заявку",
+        roles: ["Guest", "Worker", "Admin", "SuperAdmin"],
+      },
+      {
+        key: "/bids/incoming",
+        label: "Входящие заявки",
+        roles: ["Guest", "Worker", "Admin", "SuperAdmin"],
+      },
+      
     ],
   },
 ];

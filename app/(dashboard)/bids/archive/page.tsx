@@ -54,7 +54,7 @@ export default function DocumentsPage() {
         }
       `}</style>
 
-      <Title level={2}>Архив документов / Заявки</Title>
+      <Title level={2}>Архив заявок</Title>
 
       <div className="no-print" style={{ marginBottom: 24 }}>
         <Space size="middle">

@@ -11,9 +11,10 @@ const ROUTE_PERMISSIONS: { [key: string]: string[] } = {
   "/workers": ["SuperAdmin", "Admin"],
   "/otdels": ["SuperAdmin", "Admin", "Worker"],
   "/chat": ["SuperAdmin", "Admin", "Worker"],
-  "/documents": ["SuperAdmin", "Admin", "Worker"],
+  "/archive": ["SuperAdmin", "Admin", "Worker"],
   "/profile": ["SuperAdmin", "Admin", "Worker"],
-  "/bids": ["SuperAdmin", "Admin"],
+  // "/bids": ["SuperAdmin", "Admin"],
+  "/create": ["Worker", "Guest", "SuperAdmin", "Admin"]
 };
 
 const API_URL = apiBaseUrl;

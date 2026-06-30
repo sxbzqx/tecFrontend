@@ -38,7 +38,7 @@ export default function HomePage() {
             alt="ТЭЦ"
             fill
             priority
-            quality={100} // Гарантия максимального качества
+            quality={100}
             placeholder="empty"
             unoptimized
           />

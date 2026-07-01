@@ -17,7 +17,7 @@ import FAQ_ITEMS from "@/components/main/faq";
 import FEATURES from "@/components/main/features";
 import QUICK_LINKS from "@/components/main/quickLinks";
 import Image from "next/image";
-import tecMain from "@/public/tec-1920x600.jpg"
+import tecMain from "@/public/landingTEC.jpg"
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -70,7 +70,7 @@ export default function HomePage() {
                 Перейти в раздел
               </Button>
             </Link>
-            <Link href="/workers">
+            <Link href="/navigation">
               <Button size="large" className={styles.btnGhost}>
                 Узнать больше
               </Button>

@@ -10,6 +10,7 @@ import { Content } from "antd/es/layout/layout";
 import { AuthProvider } from "@/context/AuthContext";
 import { decodeAccessToken } from "@/utils/jwt";
 import "./globals.css";
+import ContextMenuWrapper from "@/components/contextMenu/contextMenuWrapper";
 
 const golosText = Golos_Text({
   subsets: ["latin", "cyrillic"],
@@ -46,11 +47,13 @@ export default async function RootLayout({
           <Providers>
             <AuthProvider initialAuth={initialAuth}>
               <App>
-                <Layout style={{ minHeight: "100vh" }}>
-                  <Navbar />
-                  <Content style={{ padding: 0 }}>{children}</Content>
-                  <FooterWrapper />
-                </Layout>
+                {/* <ContextMenuWrapper>  кастом контекст меню (ПКМ) */}
+                  <Layout style={{ minHeight: "100vh" }}>
+                    <Navbar />
+                    <Content style={{ padding: 0 }}>{children}</Content>
+                    <FooterWrapper />
+                  </Layout>
+                {/* </ContextMenuWrapper> */}
               </App>
             </AuthProvider>
           </Providers>

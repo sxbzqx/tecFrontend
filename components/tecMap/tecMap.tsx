@@ -15,11 +15,15 @@ function SetBounds() {
   return null;
 }
 
-export default function tecMap() {
+interface TecMapProps {
+  height?: number | string;
+}
+
+export default function TecMap({ height = 400 }: TecMapProps) {
   return (
-    <MapContainer 
-      style={{ height: "400px", width: "500px" }}
-      maxBounds={myBounds} 
+    <MapContainer
+      style={{ height, width: "100%" }}
+      maxBounds={myBounds}
       minZoom={10}
       attributionControl={false}
     >

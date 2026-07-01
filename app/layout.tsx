@@ -40,11 +40,18 @@ export default async function RootLayout({
     loginName: loginName || "",
   };
 
+  const initialTheme = cookieStore.get("theme")?.value === "dark" ? "dark" : "light";
+  const initialLocale = cookieStore.get("locale")?.value === "kg" ? "kg" : "ru";
+
   return (
-    <html lang="ru" className={golosText.variable}>
+    <html
+      lang={initialLocale === "kg" ? "ky" : "ru"}
+      data-theme={initialTheme}
+      className={golosText.variable}
+    >
       <body>
         <AntdRegistry>
-          <Providers>
+          <Providers initialTheme={initialTheme} initialLocale={initialLocale}>
             <AuthProvider initialAuth={initialAuth}>
               <App>
                 {/* <ContextMenuWrapper>  кастом контекст меню (ПКМ) */}

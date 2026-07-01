@@ -2,9 +2,11 @@
 
 import React, { useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Layout, Menu, Button, Space, Tag } from "antd";
-import { ThunderboltOutlined } from "@ant-design/icons";
+import { Layout, Menu, Button, Space, Tag, Segmented, Tooltip } from "antd";
+import { BulbOutlined, BulbFilled } from "@ant-design/icons";
 import { useAuth } from "@/hooks/useAuth";
+import { useThemeMode } from "@/context/ThemeContext";
+import { useLocale } from "@/context/LocaleContext";
 import { NAV_LINKS } from "@/constants/navLinks";
 import Link from "next/link";
 import type { MenuProps } from "antd";
@@ -22,12 +24,13 @@ const findItemByKey = (items: any[], key: string): any => {
   return null;
 };
 
-const prepareMenuItems = (links: any[], userRole: string): any[] => {
+const prepareMenuItems = (links: any[], userRole: string, locale: string): any[] => {
   return links
     .filter((link) => !link.roles || link.roles.includes(userRole))
-    .map(({ isDownload, roles, children, ...rest }) => ({
+    .map(({ isDownload, roles, children, label, labelKg, ...rest }) => ({
       ...rest,
-      children: children ? prepareMenuItems(children, userRole) : undefined,
+      label: locale === "kg" && labelKg ? labelKg : label,
+      children: children ? prepareMenuItems(children, userRole, locale) : undefined,
     }));
 };
 
@@ -35,10 +38,12 @@ export default function Navbar() {
   const { auth } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const { mode, toggleTheme } = useThemeMode();
+  const { locale, setLocale, t } = useLocale();
 
   const menuItems = useMemo(
-    () => prepareMenuItems(NAV_LINKS, auth.role),
-    [auth.role],
+    () => prepareMenuItems(NAV_LINKS, auth.role, locale),
+    [auth.role, locale],
   );
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
@@ -82,21 +87,6 @@ export default function Navbar() {
         }}
         onClick={() => router.push("/")}
       >
-        {/* <span
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 9,
-            background: "rgba(255,255,255,0.1)",
-            color: "#A89FE8",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 16,
-          }}
-        >
-          <ThunderboltOutlined />
-        </span> */}
         <span style={{ fontWeight: 700, color: "#fff", fontSize: 16, letterSpacing: "-0.2px" }}>
           МП Бишкек ТЭЦ
         </span>
@@ -112,6 +102,33 @@ export default function Navbar() {
       />
 
       <Space size={20} style={{ marginRight: 24, flexShrink: 0 }}>
+        <Space size={10}>
+          <Segmented
+            size="small"
+            value={locale}
+            onChange={(value) => setLocale(value as "ru" | "kg")}
+            options={[
+              { label: "RU", value: "ru" },
+              { label: "KG", value: "kg" },
+            ]}
+            aria-label={t("langSwitchLabel")}
+          />
+          <Tooltip title={mode === "dark" ? t("themeToggleToLight") : t("themeToggleToDark")}>
+            <Button
+              type="text"
+              onClick={toggleTheme}
+              icon={
+                mode === "dark" ? (
+                  <BulbFilled style={{ color: "#facc15" }} />
+                ) : (
+                  <BulbOutlined style={{ color: "rgba(255,255,255,0.85)" }} />
+                )
+              }
+              aria-label={mode === "dark" ? t("themeToggleToLight") : t("themeToggleToDark")}
+            />
+          </Tooltip>
+        </Space>
+
         {auth.role !== "Guest" ? (
           <>
             <Space size={8}>
@@ -120,17 +137,17 @@ export default function Navbar() {
             </Space>
             {pathname === "/profile" ? (
               <Link href="/">
-                <Button type="primary">На главную</Button>
+                <Button type="primary">{t("navBackHome")}</Button>
               </Link>
             ) : (
               <Link href="/profile">
-                <Button type="primary">Профиль</Button>
+                <Button type="primary">{t("navProfile")}</Button>
               </Link>
             )}
           </>
         ) : (
           <Button type="primary" onClick={() => router.push("/login")}>
-            Вход
+            {t("navLogin")}
           </Button>
         )}
       </Space>
